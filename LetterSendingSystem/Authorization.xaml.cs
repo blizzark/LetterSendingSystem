@@ -48,5 +48,13 @@ namespace LetterSendingSystem
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void RegistrationButton_Click(object sender, RoutedEventArgs e)
+        {
+            RegistrationForm win = new RegistrationForm();
+            this.Hide();
+            win.ShowDialog();
+            this.Close();
+        }
     }
 }

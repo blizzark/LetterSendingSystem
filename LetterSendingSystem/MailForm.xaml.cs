@@ -1,19 +1,9 @@
-﻿using System;
+﻿using LetterSendingSystem.Entities;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using LetterSendingSystem.Entities;
 
 namespace LetterSendingSystem
 {
@@ -22,34 +12,66 @@ namespace LetterSendingSystem
     /// </summary>
     public partial class MailForm : Window
     {
-        private User user { get; set; }
+        private User userSender { get; set; }
 
         public MailForm(User user)
         {
-            this.user = user;
+            this.userSender = user;
             InitializeComponent();
             Title = $"Здравствуйте, {user.FirstName}!";
+            UpdateListBoxUserLetters();
+            UpdateListBoxUserHistory();
         }
-        
-        private List<string> GetFilteredCountries(string searchText)
+
+        private void UpdateListBoxUserLetters()
         {
-            List<string> filteredCountries = new List<string>();
-            List<User>? Countries = ConnectDB.GetListUser(searchText).Result;
+            try
+            {
+                listBoxUserLetters.ItemsSource = ConnectDB.GetListUserLetters(userSender.Id).Result;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessegeBox(ex.Message);
+            }
+        }
+        private void UpdateListBoxUserHistory()
+        {
+            try
+            {
+                listBoxUserHistory.ItemsSource = ConnectDB.GetListUserHistory(userSender.Id).Result;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessegeBox(ex.Message);
+            }
+        }
+        private List<User>? GetFilteredCountries(string searchText)
+        {
+
+
+            List<User>? Countries = null;
+
+            try
+            {
+                Countries = ConnectDB.GetListUser(searchText).Result;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessegeBox(ex.Message);
+            }
 
             if (Countries == null)
-                return filteredCountries;
+                return Countries;
 
-            foreach (User usersCountries in Countries!)
-            {
-                
-                filteredCountries.Add(usersCountries.FirstName + " " + usersCountries.SecondName + " " + usersCountries.Email);
-                
-            }
-            return filteredCountries;
+            return Countries;
         }
 
         private void ComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+
+            if ((User)ComboNameRecipient.SelectedItem is User)
+                return;
+
             string searchText = ComboNameRecipient.Text;
             ComboNameRecipient.ItemsSource = GetFilteredCountries(searchText);
 
@@ -68,7 +90,7 @@ namespace LetterSendingSystem
             {
                 // Если элемент не выбран менять фильтр
                 CollectionView cv = (CollectionView)CollectionViewSource.GetDefaultView(ComboNameRecipient.ItemsSource);
-                cv.Filter = s => ((string)s).IndexOf(ComboNameRecipient.Text, StringComparison.CurrentCultureIgnoreCase) >= 0;
+                //cv.Filter = s => ((s.).IndexOf(ComboNameRecipient.Text, StringComparison.CurrentCultureIgnoreCase) >= 0;
             }
         }
 
@@ -90,20 +112,61 @@ namespace LetterSendingSystem
                 ErrorMessegeBox("Выберите получателя письма!");
                 return;
             }
-            
-            Letter letter = new Letter() { Sender = user.Id, Recipient = user.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now};
-            try
+            if ((User)ComboNameRecipient.SelectedItem is User userRecipient)
             {
-                await ConnectDB.PostLetter(letter);
-                ClearTextBox();
-                MessageBox.Show("Письмо успешно отправлено!", "Отправлено", MessageBoxButton.OK, MessageBoxImage.Information);
+                Letter letter = new Letter() { Sender = userSender.Id, Recipient = userRecipient.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now };
+                try
+                {
+                    await ConnectDB.PostLetter(letter);
+                    
+                    MessageBox.Show("Письмо успешно отправлено!", "Отправлено", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearTextBox();
+                    UpdateListBoxUserHistory();
+                    tabControl.SelectedItem = incomingTab;
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessegeBox(ex.Message);
+                }
+
             }
-            catch(Exception ex)
+            else
             {
-                ErrorMessegeBox(ex.Message);
+                ErrorMessegeBox("Выберите получателя письмаfff!");
+                return;
             }
 
+        }
 
+        private void listBoxUserLetters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (listBoxUserLetters.SelectedItem is Letter letter)
+            {
+                const int removeSelection = -1;
+                viewingNameRecipientBox.Text = ConnectDB.GetInformationOfUser(letter.Sender)?.Result?.Email;
+                viewingTitelTextBox.Text = letter.Titel;
+                viewingBodyTextBox.Text = letter.Text;
+                tabControl.SelectedItem = viewingLetterTab;
+                dateLabel.Content = $"Дата: {letter.Date}";
+                listBoxUserLetters.SelectedIndex = removeSelection;
+
+            }
+        }
+
+        private void listBoxUserHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (listBoxUserHistory.SelectedItem is Letter letter)
+            {
+                const int removeSelection = -1;
+                viewingNameRecipientBox.Text = ConnectDB.GetInformationOfUser(letter.Sender)?.Result?.Email;
+                viewingTitelTextBox.Text = letter.Titel;
+                viewingBodyTextBox.Text = letter.Text;
+                dateLabel.Content = $"Дата: {letter.Date}";
+                listBoxUserHistory.SelectedIndex = removeSelection;
+
+                tabControl.SelectedItem = viewingLetterTab;
+
+            }
         }
     }
 }

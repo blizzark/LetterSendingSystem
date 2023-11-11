@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace LetterSendingSystem.Entities
 {
@@ -17,7 +18,8 @@ namespace LetterSendingSystem.Entities
         public int Recipient { get; set; }
 
         public DateTime Date { get; set; }
-
         public string? Text { get; set; }
+
+        public override string ToString() => $"{ConnectDB.GetInformationOfUser(Sender)?.Result?.Email, -25} ({Titel}) {"",-25} {Date}";
     }
 }

@@ -28,6 +28,43 @@ app.MapGet("/api/search/{searchText}", (string searchText) =>
    
 });
 
+app.MapGet("/api/history/{UserId}", (int UserId) =>
+{
+    using (MailDbContext db = new MailDbContext())
+    {
+
+        // получаем пользователя по id
+        List<Letter> letters = db.Letters.Where(x => x.Sender == UserId).ToList();
+
+        // если не найден, отправляем статусный код и сообщение об ошибке
+        if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
+
+        // если пользователь найден, отправляем его
+        return Results.Json(letters);
+    }
+
+
+});
+
+
+app.MapGet("/api/letters/{UserId}", (int UserId) =>
+{
+    using (MailDbContext db = new MailDbContext())
+    {
+
+        // получаем пользователя по id
+        List<Letter> letters = db.Letters.Where(x => x.Recipient == UserId).ToList();
+
+        // если не найден, отправляем статусный код и сообщение об ошибке
+        if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
+
+        // если пользователь найден, отправляем его
+        return Results.Json(letters);
+    }
+
+
+});
+
 app.MapGet("/api/users/{id}", (int id) =>
 {
     using (MailDbContext db = new MailDbContext())

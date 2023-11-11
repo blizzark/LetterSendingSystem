@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="MailForm" Height="450" Width="800" MinWidth="800" MinHeight="450">
     <Grid>
-        <TabControl TabStripPlacement="Left" Margin="0, 0, 0, 10">
-            <TabItem Name="fontweigh2t" Header="Написать" FontSize="16">
+        <TabControl x:Name="tabControl" TabStripPlacement="Left" Margin="0, 0, 0, 10">
+            <TabItem Name="writeLetterTab" Header="Написать" FontSize="16">
                 <Grid>
                     <Label Content="Кому:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
                     <ComboBox x:Name="ComboNameRecipient" Margin="76,13,30,0" Height="31" TextBoxBase.TextChanged="ComboBox_TextChanged"  IsTextSearchEnabled="False" VerticalAlignment="Top" IsEditable="True"/>
@@ -19,15 +19,27 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Name="fontweight" Header="Входящие" FontSize="16">
+            <TabItem Name="incomingTab" Header="Входящие" FontSize="16">
                 <Grid>
-                    <DataGrid/>
+                    <ListBox x:Name="listBoxUserLetters" SelectionChanged="listBoxUserLetters_SelectionChanged" />
                 </Grid>
             </TabItem>
 
-            <TabItem Name="fontsize" Header="Отправленные" FontSize="16">
+            <TabItem Name="outgoingTab" Header="Отправленные" FontSize="16">
                 <Grid>
-                    <DataGrid/>
+                    <ListBox x:Name="listBoxUserHistory" SelectionChanged="listBoxUserHistory_SelectionChanged"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Name="viewingLetterTab" Header="" FontSize="16" Visibility="Hidden" >
+                <Grid>
+                    <Label Content="Кому:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="viewingNameRecipientBox" Margin="76,13,30,0" Height="31"   VerticalAlignment="Top" IsReadOnly="True"/>
+                    <Label Content="Тема:" HorizontalAlignment="Left" Margin="10,49,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="viewingTitelTextBox" Margin="76,50,30,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="16" Height="31" IsReadOnly="True"/>
+                    <TextBox x:Name="viewingBodyTextBox" Margin="19,108,30,76" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+                    <Label x:Name="dateLabel" Content="" HorizontalAlignment="Left" Margin="19,0,0,24" VerticalAlignment="Bottom"/>
+
                 </Grid>
             </TabItem>
 
