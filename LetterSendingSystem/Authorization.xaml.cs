@@ -34,6 +34,7 @@ namespace LetterSendingSystem
                 if (user != null)
                 {
                     MailForm win = new MailForm(user);
+                    this.Hide();
                     win.ShowDialog();
                     this.Close();
                 }

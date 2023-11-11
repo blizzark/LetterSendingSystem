@@ -11,11 +11,11 @@
             <TabItem Name="fontweigh2t" Header="Написать" FontSize="16">
                 <Grid>
                     <Label Content="Кому:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ComboNames" Margin="76,13,30,0" Height="31" TextBoxBase.TextChanged="ComboBox_TextChanged" VerticalAlignment="Top" IsEditable="True"/>
+                    <ComboBox x:Name="ComboNameRecipient" Margin="76,13,30,0" Height="31" TextBoxBase.TextChanged="ComboBox_TextChanged"  IsTextSearchEnabled="False" VerticalAlignment="Top" IsEditable="True"/>
                     <Label Content="Тема:" HorizontalAlignment="Left" Margin="10,49,0,0" VerticalAlignment="Top"/>
-                    <TextBox Margin="76,50,30,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="16" Height="31"/>
-                    <TextBox Margin="19,108,30,76" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"/>
-                    <Button x:Name="ButtonSendLetter" Content="Отправить" Margin="0,0,30,20" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="117"/>
+                    <TextBox x:Name="titelTextBox" Margin="76,50,30,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="16" Height="31"/>
+                    <TextBox x:Name="bodyTextBox" Margin="19,108,30,76" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"/>
+                    <Button x:Name="ButtonSendLetter" Content="Отправить" Margin="0,0,30,20" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="117" Click="ButtonSendLetter_Click"/>
 
                 </Grid>
             </TabItem>

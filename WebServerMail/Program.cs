@@ -10,6 +10,24 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
 
+app.MapGet("/api/search/{searchText}", (string searchText) =>
+{
+    using (MailDbContext db = new MailDbContext())
+    {
+        List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).ToList();
+        //List<User> users = db.Users.Where(x => x.FirstName.StartsWith(searchText) || x.SecondName.StartsWith(searchText) || x.Email.StartsWith(searchText)).ToList();
+        // получаем пользовател€ по id
+        // если не найден, отправл€ем статусный код и сообщение об ошибке
+        if (users.Count == 0) return Results.NotFound(new { message = "ѕользователи не найдены" });
+        
+
+        // если пользователь найден, отправл€ем его
+        return Results.Json(users);
+    }
+
+   
+});
+
 app.MapGet("/api/users/{id}", (int id) =>
 {
     using (MailDbContext db = new MailDbContext())
@@ -24,7 +42,7 @@ app.MapGet("/api/users/{id}", (int id) =>
         return Results.Json(user);
     }
 
-   
+
 });
 
 app.MapGet("/api/users/{login}/{password}", (string login, string password) =>
