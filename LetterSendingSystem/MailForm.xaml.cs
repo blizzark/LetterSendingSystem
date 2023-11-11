@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LetterSendingSystem.Entities;
 
 namespace LetterSendingSystem
 {
@@ -19,9 +20,13 @@ namespace LetterSendingSystem
     /// </summary>
     public partial class MailForm : Window
     {
-        public MailForm()
+        private User user { get; set; }
+
+        public MailForm(User user)
         {
+            this.user = user;
             InitializeComponent();
+            Title = $"Здравствуйте, {user.FirstName}!";
             ComboNames.ItemsSource = GetCountries();
         }
         private List<string> GetCountries()

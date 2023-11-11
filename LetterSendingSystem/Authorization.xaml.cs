@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LetterSendingSystem.Entities;
 
 namespace LetterSendingSystem
 {
@@ -22,7 +23,29 @@ namespace LetterSendingSystem
         public Authorization()
         {
             InitializeComponent();
+            
+        }
 
+        private void ButtonEnter_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                User? user = ConnectDB.GetUser(loginTextBox.Text, passwordBox.Password).Result;
+                if (user != null)
+                {
+                    MailForm win = new MailForm(user);
+                    win.ShowDialog();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Пользователь не найден!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
