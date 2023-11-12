@@ -1,16 +1,47 @@
-
-
-
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System;
 using WebServerMail;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder();
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            // указывает, будет ли валидироваться издатель при валидации токена
+            ValidateIssuer = true,
+            // строка, представляющая издателя
+            ValidIssuer = AuthOptions.ISSUER,
+            // будет ли валидироваться потребитель токена
+            ValidateAudience = true,
+            // установка потребителя токена
+            ValidAudience = AuthOptions.AUDIENCE,
+            // будет ли валидироваться время существования
+            ValidateLifetime = true,
+            // установка ключа безопасности
+            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            // валидация ключа безопасности
+            ValidateIssuerSigningKey = true,
+        };
+    });
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/api/search/{searchText}", (string searchText) =>
+
+
+app.MapGet("/", [Authorize] () => "Hello World!");
+
+app.MapGet("/api/search/{searchText}", [Authorize] (string searchText) =>
 {
     using (MailDbContext db = new MailDbContext())
     {
@@ -28,7 +59,7 @@ app.MapGet("/api/search/{searchText}", (string searchText) =>
    
 });
 
-app.MapGet("/api/history/{UserId}", (int UserId) =>
+app.MapGet("/api/history/{UserId}", [Authorize] (int UserId) =>
 {
     using (MailDbContext db = new MailDbContext())
     {
@@ -47,25 +78,25 @@ app.MapGet("/api/history/{UserId}", (int UserId) =>
 });
 
 
-app.MapGet("/api/letters/{UserId}", (int UserId) =>
+app.MapGet("/api/letters/{UserId}",[Authorize] (int UserId) =>
 {
     using (MailDbContext db = new MailDbContext())
     {
 
-        // получаем пользователя по id
+   
         List<Letter> letters = db.Letters.Where(x => x.Recipient == UserId).ToList();
 
         // если не найден, отправляем статусный код и сообщение об ошибке
         if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
 
-        // если пользователь найден, отправляем его
+      
         return Results.Json(letters);
     }
 
 
 });
 
-app.MapGet("/api/users/{id}", (int id) =>
+app.MapGet("/api/users/{id}", [Authorize] (int id) =>
 {
     using (MailDbContext db = new MailDbContext())
     {
@@ -87,18 +118,34 @@ app.MapGet("/api/users/{login}/{password}", (string login, string password) =>
     using (MailDbContext db = new MailDbContext())
     {
 
-        User? user = db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
+        User? userCheck = db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
         // если не найден, отправляем статусный код и сообщение об ошибке
-        if (user == null) return Results.NotFound(new { message = "Пользователь не найден" });
+        if (userCheck is null) return Results.Unauthorized();
 
-        // если пользователь найден, отправляем его
-        return Results.Json(user);
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, userCheck.Email) };
+        // создаем JWT-токен
+        var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+        // формируем ответ
+        var response = new
+        {
+            access_token = encodedJwt,
+            user = userCheck
+        };
+
+        return Results.Json(response);
     }
 
 
 });
 
-app.MapPost("/api/letter", (Letter letter) =>
+app.MapPost("/api/letter", [Authorize] (Letter letter) =>
 {
     using (MailDbContext db = new MailDbContext())
     {
@@ -109,7 +156,7 @@ app.MapPost("/api/letter", (Letter letter) =>
 });
 
 
-app.MapPost("/api/create/user", (User user) =>
+app.MapPost("/api/create/user", [Authorize] (User user) =>
 {
     using (MailDbContext db = new MailDbContext())
     {
@@ -125,4 +172,13 @@ app.MapPost("/api/create/user", (User user) =>
 
 app.Run();
 
+
+public class AuthOptions
+{
+    public const string ISSUER = "localhost"; // издатель токена
+    public const string AUDIENCE = "LetterSendingSystem"; // потребитель токена
+    const string KEY = "7hHLsZBS5AsHqsDKBgwj7g";   // ключ для шифрации
+    public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
+        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
+}
 

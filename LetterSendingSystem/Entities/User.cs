@@ -37,4 +37,11 @@ namespace LetterSendingSystem.Entities
 
         public override string ToString() => $"{Email} ({FirstName} {SecondName})";
     }
+
+    public class JSON_UserAndTocken
+    {
+        public string access_token { get; set; } = null!;
+        public User User { get; set; } = null!;
+    }
+
 }
