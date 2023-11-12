@@ -8,13 +8,14 @@ using System.Net.Http.Json;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Web;
+using LetterSendingSystem.JsonItems;
 
 namespace LetterSendingSystem
 {
     internal static class ConnectDB
     {
         static HttpClient httpClient = new HttpClient();
-        static string hostName = "http://localhost:5161";
+        public static string hostName = string.Empty;
         public static async Task<User?> GetUser(string login, string password)
         {
             using var response = await httpClient.GetAsync($"{hostName}/api/users/{login}/{password}").ConfigureAwait(false);
@@ -26,7 +27,7 @@ namespace LetterSendingSystem
             else if (response.StatusCode == HttpStatusCode.OK)
             {
                 // считываем ответ
-                var userAndTocken = await response.Content.ReadFromJsonAsync<JSON_UserAndTocken>();
+                var userAndTocken = await response.Content.ReadFromJsonAsync<UserAndTocken>();
 
                 User user = userAndTocken!.User;
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userAndTocken.access_token);

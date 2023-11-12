@@ -19,9 +19,7 @@ public partial class MailDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-P2R4FNM\\SQLEXPRESS;Database=MailDB;Trusted_Connection=True;TrustServerCertificate=Yes");
-    //TODO засунь в джейсон
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Letter>(entity =>

@@ -7,11 +7,28 @@ using System;
 using WebServerMail;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
-var builder = WebApplication.CreateBuilder();
+#region builderEntity
+var builderEntity = new ConfigurationBuilder();
+// установка пути к текущему каталогу
+builderEntity.SetBasePath(Directory.GetCurrentDirectory());
+// получаем конфигурацию из файла appsettings.json
+builderEntity.AddJsonFile("appsettings.json");
+// создаем конфигурацию
+var config = builderEntity.Build();
+// получаем строку подключени€
+string connectionString = config.GetConnectionString("DefaultConnection")!;
 
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+var optionsBuilder = new DbContextOptionsBuilder<MailDbContext>();
+var options = optionsBuilder.UseSqlServer(connectionString).Options;
+#endregion
+#region builderASP
+var builderASP = WebApplication.CreateBuilder();
+
+builderASP.Services.AddAuthorization();
+builderASP.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -32,7 +49,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
         };
     });
-var app = builder.Build();
+#endregion
+
+var app = builderASP.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -43,7 +62,7 @@ app.MapGet("/", [Authorize] () => "Hello World!");
 
 app.MapGet("/api/search/{searchText}", [Authorize] (string searchText) =>
 {
-    using (MailDbContext db = new MailDbContext())
+    using (MailDbContext db = new MailDbContext(options))
     {
         List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).ToList();
         //List<User> users = db.Users.Where(x => x.FirstName.StartsWith(searchText) || x.SecondName.StartsWith(searchText) || x.Email.StartsWith(searchText)).ToList();
@@ -61,7 +80,7 @@ app.MapGet("/api/search/{searchText}", [Authorize] (string searchText) =>
 
 app.MapGet("/api/history/{UserId}", [Authorize] (int UserId) =>
 {
-    using (MailDbContext db = new MailDbContext())
+    using (MailDbContext db = new MailDbContext(options))
     {
 
         // получаем пользовател€ по id
@@ -80,7 +99,7 @@ app.MapGet("/api/history/{UserId}", [Authorize] (int UserId) =>
 
 app.MapGet("/api/letters/{UserId}",[Authorize] (int UserId) =>
 {
-    using (MailDbContext db = new MailDbContext())
+    using (MailDbContext db = new MailDbContext(options))
     {
 
    
@@ -98,7 +117,7 @@ app.MapGet("/api/letters/{UserId}",[Authorize] (int UserId) =>
 
 app.MapGet("/api/users/{id}", [Authorize] (int id) =>
 {
-    using (MailDbContext db = new MailDbContext())
+    using (MailDbContext db = new MailDbContext(options))
     {
 
         // получаем пользовател€ по id
@@ -115,7 +134,7 @@ app.MapGet("/api/users/{id}", [Authorize] (int id) =>
 
 app.MapGet("/api/users/{login}/{password}", (string login, string password) =>
 {
-    using (MailDbContext db = new MailDbContext())
+    using (MailDbContext db = new MailDbContext(options))
     {
 
         User? userCheck = db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
@@ -147,7 +166,7 @@ app.MapGet("/api/users/{login}/{password}", (string login, string password) =>
 
 app.MapPost("/api/letter", [Authorize] (Letter letter) =>
 {
-    using (MailDbContext db = new MailDbContext())
+    using (MailDbContext db = new MailDbContext(options))
     {
         db.Letters.Add(letter);
         db.SaveChanges();
@@ -158,7 +177,7 @@ app.MapPost("/api/letter", [Authorize] (Letter letter) =>
 
 app.MapPost("/api/create/user", [Authorize] (User user) =>
 {
-    using (MailDbContext db = new MailDbContext())
+    using (MailDbContext db = new MailDbContext(options))
     {
         User? existenceCheckUser = db.Users.FirstOrDefault(u => u.Email == user.Email);
         if (existenceCheckUser != null) return Results.BadRequest(new { message = "ѕользователь с такой почтой уже зарегистрирован!" });

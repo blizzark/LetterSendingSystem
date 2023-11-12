@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LetterSendingSystem.Entities;
+using LetterSendingSystem.JsonItems;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 
 namespace LetterSendingSystem
 {
@@ -23,13 +28,26 @@ namespace LetterSendingSystem
         public Authorization()
         {
             InitializeComponent();
-            
+            LoadJson();
+        }
+
+        public void LoadJson()
+        {
+            using (StreamReader r = new StreamReader(System.AppDomain.CurrentDomain.BaseDirectory + "appsettings.json"))
+            {
+                string json = r.ReadToEnd();
+                ServerData serverData = JsonSerializer.Deserialize<ServerData>(json)!;   
+                ConnectDB.hostName = serverData.ServerUrl;
+            }
         }
 
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
             string login = loginTextBox.Text;
             string password = LetterSendingSystem.MD5.GetHash(passwordBox.Password);
+
+
+
             try
             {
                 User? user = ConnectDB.GetUser(login, password).Result;
