@@ -5,8 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LetterSendingSystem"
         mc:Ignorable="d"
-        Title="Регистрация" Height="450" Width="261" WindowStartupLocation="CenterScreen">
+        Title="Регистрация" Height="450" Width="261" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        
+        <Label Content="Ваше имя:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="firstNameBox" HorizontalAlignment="Center" Margin="0,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="227" Height="27" FontSize="16" MaxLength="20"/>
+        <Label Content="Ваша фамилия:" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="secondNameBox" HorizontalAlignment="Center" Margin="0,100,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="227" Height="27" FontSize="16" MaxLength="18"/>
+        <Label Content="Ваша почта:" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="eMailBox" HorizontalAlignment="Center" Margin="0,159,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="227" Height="27" FontSize="16" MaxLength="20"/>
+        <Label Content="Ваш пароль:" HorizontalAlignment="Left" Margin="10,186,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <PasswordBox x:Name="passwordBox" HorizontalAlignment="Center" Margin="0,217,0,0" VerticalAlignment="Top" Width="227" Height="27" MaxLength="50"/>
+        <Label Content="Повторите пароль:" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <PasswordBox x:Name="confirmPasswordBox" HorizontalAlignment="Center" Margin="0,275,0,0" VerticalAlignment="Top" Width="227" Height="27" MaxLength="50"/>
+        <Button x:Name="registerButton" Content="Подтвердить" Margin="60,336,17,0" FontSize="16" Height="32" VerticalAlignment="Top" Click="registerButton_Click"/>
+        <Button x:Name="returnToAuthButton" Content="" Margin="17,336,212,0" FontSize="16" Click="returnToAuthButton_Click" Height="32" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>

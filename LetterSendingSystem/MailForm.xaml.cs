@@ -94,7 +94,7 @@ namespace LetterSendingSystem
             }
         }
 
-        private void ErrorMessegeBox(string mes)
+        public static void ErrorMessegeBox(string mes)
         {
             MessageBox.Show(mes, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -167,6 +167,14 @@ namespace LetterSendingSystem
                 tabControl.SelectedItem = viewingLetterTab;
 
             }
+        }
+
+        private void ExitToAuth_Click(object sender, RoutedEventArgs e)
+        {
+            Authorization win = new Authorization();
+            this.Hide();
+            win.ShowDialog();
+            this.Close();
         }
     }
 }

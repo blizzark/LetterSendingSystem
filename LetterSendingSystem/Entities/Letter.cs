@@ -15,11 +15,12 @@ namespace LetterSendingSystem.Entities
 
         public int Sender { get; set; }
 
+        public string? EmailSender { get; set; }
+
         public int Recipient { get; set; }
 
         public DateTime Date { get; set; }
         public string? Text { get; set; }
-
-        public override string ToString() => $"{ConnectDB.GetInformationOfUser(Sender)?.Result?.Email, -25} ({Titel}) {"",-25} {Date}";
+        
     }
 }

@@ -98,7 +98,7 @@ app.MapGet("/api/users/{login}/{password}", (string login, string password) =>
 
 });
 
-app.MapPost("/api/letters", (Letter letter) =>
+app.MapPost("/api/letter", (Letter letter) =>
 {
     using (MailDbContext db = new MailDbContext())
     {
@@ -106,6 +106,21 @@ app.MapPost("/api/letters", (Letter letter) =>
         db.SaveChanges();
     }
    
+});
+
+
+app.MapPost("/api/create/user", (User user) =>
+{
+    using (MailDbContext db = new MailDbContext())
+    {
+        User? existenceCheckUser = db.Users.FirstOrDefault(u => u.Email == user.Email);
+        if (existenceCheckUser != null) return Results.BadRequest(new { message = "ѕользователь с такой почтой уже зарегистрирован!" });
+
+        db.Users.Add(user);
+        db.SaveChanges();
+        return Results.Json(user);
+    }
+
 });
 
 app.Run();

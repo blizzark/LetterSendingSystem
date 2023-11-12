@@ -28,9 +28,11 @@ namespace LetterSendingSystem
 
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
+            string login = loginTextBox.Text;
+            string password = LetterSendingSystem.MD5.GetHash(passwordBox.Password);
             try
             {
-                User? user = ConnectDB.GetUser(loginTextBox.Text, passwordBox.Password).Result;
+                User? user = ConnectDB.GetUser(login, password).Result;
                 if (user != null)
                 {
                     MailForm win = new MailForm(user);

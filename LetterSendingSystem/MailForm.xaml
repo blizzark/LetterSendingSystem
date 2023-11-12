@@ -7,43 +7,58 @@
         mc:Ignorable="d"
         Title="MailForm" Height="450" Width="800" MinWidth="800" MinHeight="450">
     <Grid>
-        <TabControl x:Name="tabControl" TabStripPlacement="Left" Margin="0, 0, 0, 10">
-            <TabItem Name="writeLetterTab" Header="Написать" FontSize="16">
-                <Grid>
-                    <Label Content="Кому:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ComboNameRecipient" Margin="76,13,30,0" Height="31" TextBoxBase.TextChanged="ComboBox_TextChanged"  IsTextSearchEnabled="False" VerticalAlignment="Top" IsEditable="True"/>
-                    <Label Content="Тема:" HorizontalAlignment="Left" Margin="10,49,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="titelTextBox" Margin="76,50,30,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="16" Height="31"/>
-                    <TextBox x:Name="bodyTextBox" Margin="19,108,30,76" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"/>
-                    <Button x:Name="ButtonSendLetter" Content="Отправить" Margin="0,0,30,20" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="117" Click="ButtonSendLetter_Click"/>
+        <Grid>
+            <TabControl x:Name="tabControl" TabStripPlacement="Left" Margin="0, 0, 0, 10">
+                <TabItem Name="writeLetterTab" Header="Написать" FontSize="16">
+                    <Grid>
+                        <Label Content="Кому:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
+                        <ComboBox x:Name="ComboNameRecipient" Margin="76,13,30,0" Height="31" TextBoxBase.TextChanged="ComboBox_TextChanged"  IsTextSearchEnabled="False" VerticalAlignment="Top" IsEditable="True"/>
+                        <Label Content="Тема:" HorizontalAlignment="Left" Margin="10,49,0,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="titelTextBox" Margin="76,50,30,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="16" Height="31"/>
+                        <TextBox x:Name="bodyTextBox" Margin="19,108,30,76" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"/>
+                        <Button x:Name="ButtonSendLetter" Content="Отправить" Margin="0,0,30,20" VerticalAlignment="Bottom" Height="35" HorizontalAlignment="Right" Width="117" Click="ButtonSendLetter_Click"/>
 
-                </Grid>
-            </TabItem>
-            <TabItem Name="incomingTab" Header="Входящие" FontSize="16">
-                <Grid>
-                    <ListBox x:Name="listBoxUserLetters" SelectionChanged="listBoxUserLetters_SelectionChanged" />
-                </Grid>
-            </TabItem>
+                    </Grid>
+                </TabItem>
+                <TabItem Name="incomingTab" Header="Входящие" FontSize="16">
+                    <Grid>
+                        <ListView x:Name="listBoxUserLetters" SelectionChanged="listBoxUserLetters_SelectionChanged" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=EmailSender}"  Width="auto">Кому</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Titel}" Width="auto">Тема</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Date}" Width="auto">Дата</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </TabItem>
 
-            <TabItem Name="outgoingTab" Header="Отправленные" FontSize="16">
-                <Grid>
-                    <ListBox x:Name="listBoxUserHistory" SelectionChanged="listBoxUserHistory_SelectionChanged"/>
-                </Grid>
-            </TabItem>
+                <TabItem Name="outgoingTab" Header="Отправленные" FontSize="16">
+                    <Grid>
+                        <ListBox x:Name="listBoxUserHistory" SelectionChanged="listBoxUserHistory_SelectionChanged"/>
+                    </Grid>
+                </TabItem>
 
-            <TabItem Name="viewingLetterTab" Header="" FontSize="16" Visibility="Hidden" >
-                <Grid>
-                    <Label Content="Кому:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="viewingNameRecipientBox" Margin="76,13,30,0" Height="31"   VerticalAlignment="Top" IsReadOnly="True"/>
-                    <Label Content="Тема:" HorizontalAlignment="Left" Margin="10,49,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="viewingTitelTextBox" Margin="76,50,30,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="16" Height="31" IsReadOnly="True"/>
-                    <TextBox x:Name="viewingBodyTextBox" Margin="19,108,30,76" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
-                    <Label x:Name="dateLabel" Content="" HorizontalAlignment="Left" Margin="19,0,0,24" VerticalAlignment="Bottom"/>
+                <TabItem Name="viewingLetterTab" Header="" FontSize="16" Visibility="Hidden" >
+                    <Grid>
+                        <Label Content="Кому:" HorizontalAlignment="Left" Margin="10,11,0,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="viewingNameRecipientBox" Margin="76,13,30,0" Height="31"   VerticalAlignment="Top" IsReadOnly="True"/>
+                        <Label Content="Тема:" HorizontalAlignment="Left" Margin="10,49,0,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="viewingTitelTextBox" Margin="76,50,30,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="16" Height="31" IsReadOnly="True"/>
+                        <TextBox x:Name="viewingBodyTextBox" Margin="19,108,30,76" TextWrapping="Wrap" Text="" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
+                        <Label x:Name="dateLabel" Content="" HorizontalAlignment="Left" Margin="19,0,0,24" VerticalAlignment="Bottom"/>
 
-                </Grid>
-            </TabItem>
+                    </Grid>
+                </TabItem>
 
-        </TabControl>
 
+
+            </TabControl>
+        </Grid>
+        <Grid Margin="10,0,0,10" HorizontalAlignment="Left" Width="102" Height="33" VerticalAlignment="Bottom">
+            <Button x:Name="ExitToAuth" Content="Выход" Click="ExitToAuth_Click"/>
+        </Grid>
     </Grid>
+
 </Window>

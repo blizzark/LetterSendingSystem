@@ -115,10 +115,20 @@ namespace LetterSendingSystem
 
         public static async Task PostLetter(Letter letter)
         {
-            using var response = await httpClient.PostAsJsonAsync($"{hostName}/api/letters", letter).ConfigureAwait(false);
+            using var response = await httpClient.PostAsJsonAsync($"{hostName}/api/letter", letter).ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
            if (response.StatusCode != HttpStatusCode.OK)
                 throw new System.Exception($"Ошибка на сервере {response.StatusCode}");
+        }
+
+        public static async Task<User?> CreateUser(User user)
+        {
+            using var response = await httpClient.PostAsJsonAsync($"{hostName}/api/create/user", user).ConfigureAwait(false);
+            // если объект на сервере найден, то есть статусный код равен 404
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new System.Exception($"Ошибка на сервере {response.StatusCode}");
+
+            return await response.Content.ReadFromJsonAsync<User>();
         }
     }
 }
