@@ -143,7 +143,7 @@ namespace LetterSendingSystem
             if (listBoxUserLetters.SelectedItem is Letter letter)
             {
                 const int removeSelection = -1;
-                viewingNameRecipientBox.Text = ConnectDB.GetInformationOfUser(letter.Sender)?.Result?.Email;
+                viewingNameRecipientBox.Text = letter.EmailSender;
                 viewingTitelTextBox.Text = letter.Titel;
                 viewingBodyTextBox.Text = letter.Text;
                 tabControl.SelectedItem = viewingLetterTab;
@@ -158,7 +158,7 @@ namespace LetterSendingSystem
             if (listBoxUserHistory.SelectedItem is Letter letter)
             {
                 const int removeSelection = -1;
-                viewingNameRecipientBox.Text = ConnectDB.GetInformationOfUser(letter.Sender)?.Result?.Email;
+                viewingNameRecipientBox.Text = letter.EmailSender;
                 viewingTitelTextBox.Text = letter.Titel;
                 viewingBodyTextBox.Text = letter.Text;
                 dateLabel.Content = $"Дата: {letter.Date}";

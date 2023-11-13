@@ -25,7 +25,7 @@
                         <ListView x:Name="listBoxUserLetters" SelectionChanged="listBoxUserLetters_SelectionChanged" >
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Sender}"  Width="auto">От кого</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=EmailSender}"  Width="auto">От кого</GridViewColumn>
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=Titel}" Width="auto">Тема</GridViewColumn>
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=Date}" Width="auto">Дата</GridViewColumn>
                                 </GridView>
@@ -39,7 +39,7 @@
                         <ListView x:Name="listBoxUserHistory" SelectionChanged="listBoxUserHistory_SelectionChanged" >
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Sender}"  Width="auto">Кому</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=EmailSender}"  Width="auto" >Кому</GridViewColumn>
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=Titel}" Width="auto">Тема</GridViewColumn>
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=Date}" Width="auto">Дата</GridViewColumn>
                                 </GridView>

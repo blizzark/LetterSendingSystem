@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System;
-using WebServerMail;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using WebServerMail;
 
 #region builderEntity
 var builderEntity = new ConfigurationBuilder();
@@ -58,7 +55,7 @@ app.UseAuthorization();
 
 
 
-app.MapGet("/", [Authorize] () => "Hello World!");
+app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/api/search/{searchText}", [Authorize] (string searchText) =>
 {
@@ -69,47 +66,55 @@ app.MapGet("/api/search/{searchText}", [Authorize] (string searchText) =>
         // получаем пользователя по id
         // если не найден, отправляем статусный код и сообщение об ошибке
         if (users.Count == 0) return Results.NotFound(new { message = "Пользователи не найдены" });
-        
+
 
         // если пользователь найден, отправляем его
         return Results.Json(users);
     }
 
-   
+
 });
 
 app.MapGet("/api/history/{UserId}", [Authorize] (int UserId) =>
 {
     using (MailDbContext db = new MailDbContext(options))
     {
+        var letters = from letter in db.Letters
+                      join user in db.Users on letter.Sender equals user.Id
+                      where user.Id == UserId
+                      select new
+                      {
+                          EmailSender = db.Users.FirstOrDefault(x => x.Id == letter.Recipient)!.Email,
+                          Titel = letter.Titel,
+                          Text = letter.Text,
+                          Date = letter.Date
+                      };
 
-        // получаем пользователя по id
-        List<Letter> letters = db.Letters.Where(x => x.Sender == UserId).ToList();
-
-        // если не найден, отправляем статусный код и сообщение об ошибке
         if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
 
-        // если пользователь найден, отправляем его
-        return Results.Json(letters);
+        return Results.Json(letters.ToList());
     }
-
-
 });
 
 
-app.MapGet("/api/letters/{UserId}",[Authorize] (int UserId) =>
+app.MapGet("/api/letters/{UserId}", [Authorize] (int UserId) =>
 {
     using (MailDbContext db = new MailDbContext(options))
     {
+        var letters = from letter in db.Letters
+                      join user in db.Users on letter.Recipient equals user.Id
+                      where user.Id == UserId
+                      select new
+                      {
+                          EmailSender = db.Users.FirstOrDefault(x => x.Id == letter.Sender)!.Email,
+                          Titel = letter.Titel,
+                          Text = letter.Text,
+                          Date = letter.Date
+                      };
 
-   
-        List<Letter> letters = db.Letters.Where(x => x.Recipient == UserId).ToList();
-
-        // если не найден, отправляем статусный код и сообщение об ошибке
         if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
 
-      
-        return Results.Json(letters);
+        return Results.Json(letters.ToList());
     }
 
 
@@ -171,7 +176,7 @@ app.MapPost("/api/letter", [Authorize] (Letter letter) =>
         db.Letters.Add(letter);
         db.SaveChanges();
     }
-   
+
 });
 
 
