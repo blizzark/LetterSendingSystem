@@ -63,8 +63,6 @@ app.MapGet("/api/search/{searchText}", [Authorize] (string searchText) =>
     {
         List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).ToList();
         //List<User> users = db.Users.Where(x => x.FirstName.StartsWith(searchText) || x.SecondName.StartsWith(searchText) || x.Email.StartsWith(searchText)).ToList();
-        // получаем пользовател€ по id
-        // если не найден, отправл€ем статусный код и сообщение об ошибке
         if (users.Count == 0) return Results.NotFound(new { message = "ѕользователи не найдены" });
 
 
@@ -82,6 +80,7 @@ app.MapGet("/api/history/{UserId}", [Authorize] (int UserId) =>
         var letters = from letter in db.Letters
                       join user in db.Users on letter.Sender equals user.Id
                       where user.Id == UserId
+                      orderby letter.Date descending
                       select new
                       {
                           EmailSender = db.Users.FirstOrDefault(x => x.Id == letter.Recipient)!.Email,
@@ -104,6 +103,7 @@ app.MapGet("/api/letters/{UserId}", [Authorize] (int UserId) =>
         var letters = from letter in db.Letters
                       join user in db.Users on letter.Recipient equals user.Id
                       where user.Id == UserId
+                      orderby letter.Date descending
                       select new
                       {
                           EmailSender = db.Users.FirstOrDefault(x => x.Id == letter.Sender)!.Email,
