@@ -15,7 +15,7 @@ namespace LetterSendingSystem.Connect
     {
         public static async Task<List<Letter>?> GetListUserLetters(int userId)
         {
-            using var response = await Request.Client.GetAsync($"{Request.hostName}/api/letters/{userId}").ConfigureAwait(false);
+            using var response = await Request.Client.GetAsync($"{Request.hostName}{Routes.LETTERS}{userId}").ConfigureAwait(false);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -36,7 +36,7 @@ namespace LetterSendingSystem.Connect
         public static async Task<List<Letter>?> GetListUserHistory(int userId)
         {
 
-            using var response = await Request.Client.GetAsync($"{Request.hostName}/api/history/{userId}").ConfigureAwait(false);
+            using var response = await Request.Client.GetAsync($"{Request.hostName}{Routes.HISTORY}{userId}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -56,7 +56,7 @@ namespace LetterSendingSystem.Connect
 
         public static async Task PostLetter(Letter letter)
         {
-            using var response = await Request.Client.PostAsJsonAsync($"{Request.hostName}/api/letter", letter).ConfigureAwait(false);
+            using var response = await Request.Client.PostAsJsonAsync($"{Request.hostName}{Routes.SEND_LETTER}", letter).ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new System.Exception($"Ошибка на сервере {response.StatusCode}");

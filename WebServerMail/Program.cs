@@ -170,7 +170,7 @@ app.MapGet("/api/users/{login}/{password}", (string login, string password) =>
 
 });
 
-app.MapPost("/api/letter", [Authorize] (Letter letter) =>
+app.MapPost("/api/send/letter", [Authorize] (Letter letter) =>
 {
     using (MailDbContext db = new MailDbContext(options))
     {

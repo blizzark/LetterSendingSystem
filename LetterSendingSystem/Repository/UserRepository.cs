@@ -17,7 +17,7 @@ namespace LetterSendingSystem.Connect
     {
         public static async Task<User?> Auth(string login, string password)
         {
-            using var response = await Request.Client.GetAsync($"{Request.hostName}/api/users/{login}/{password}").ConfigureAwait(false);
+            using var response = await Request.Client.GetAsync($"{Request.hostName}{Routes.USERS}{login}/{password}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
@@ -40,7 +40,7 @@ namespace LetterSendingSystem.Connect
 
         public static async Task<User?> GetUser(int UserId)
         {
-            using var response = await Request.Client.GetAsync($"{Request.hostName}/api/users/{UserId}").ConfigureAwait(false);
+            using var response = await Request.Client.GetAsync($"{Request.hostName}{Routes.USERS}{UserId}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -61,7 +61,7 @@ namespace LetterSendingSystem.Connect
 
         public static async Task<List<User>?> GetListUser(string searchText)
         {
-            using var response = await Request.Client.GetAsync($"{Request.hostName}/api/search/{searchText}").ConfigureAwait(false);
+            using var response = await Request.Client.GetAsync($"{Request.hostName}{Routes.SEARCH}{searchText}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -82,7 +82,7 @@ namespace LetterSendingSystem.Connect
 
         public static async Task<User?> CreateUser(User user)
         {
-            using var response = await Request.Client.PostAsJsonAsync($"{Request.hostName}/api/create/user", user).ConfigureAwait(false);
+            using var response = await Request.Client.PostAsJsonAsync($"{Request.hostName}{Routes.CREATE_USER}", user).ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new System.Exception($"Ошибка на сервере {response.StatusCode}");
