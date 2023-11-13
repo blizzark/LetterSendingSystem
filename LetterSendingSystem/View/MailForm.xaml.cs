@@ -66,12 +66,17 @@ namespace LetterSendingSystem
 
             return Countries;
         }
-        private bool selectedCombobox = false;
+        private bool selectedComboBoxNameRecipient = false;
         private void ComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
-            if ((User)ComboNameRecipient.SelectedItem is User && !selectedCombobox)
+            if ((User)ComboNameRecipient.SelectedItem is User && selectedComboBoxNameRecipient)
+            {
+                selectedComboBoxNameRecipient = false;
                 return;
+            }
+
+           
 
             string searchText = ComboNameRecipient.Text;
             ComboNameRecipient.ItemsSource = GetFilteredCountries(searchText);
@@ -173,6 +178,11 @@ namespace LetterSendingSystem
             this.Hide();
             win.ShowDialog();
             this.Close();
+        }
+
+        private void ComboNameRecipient_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedComboBoxNameRecipient = true;
         }
     }
 }
