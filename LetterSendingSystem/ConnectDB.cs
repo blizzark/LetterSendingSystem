@@ -62,6 +62,10 @@ namespace LetterSendingSystem
 
         public static async Task<List<User>?> GetListUser(string searchText)
         {
+
+
+
+            
             using var response = await httpClient.GetAsync($"{hostName}/api/search/{searchText}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response.StatusCode == HttpStatusCode.NotFound)
