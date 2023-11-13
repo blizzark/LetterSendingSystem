@@ -66,11 +66,11 @@ namespace LetterSendingSystem
 
             return Countries;
         }
-
+        private bool selectedCombobox = false;
         private void ComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
-            if ((User)ComboNameRecipient.SelectedItem is User)
+            if ((User)ComboNameRecipient.SelectedItem is User && !selectedCombobox)
                 return;
 
             string searchText = ComboNameRecipient.Text;
