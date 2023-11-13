@@ -1,4 +1,5 @@
-﻿using LetterSendingSystem.Entities;
+﻿using LetterSendingSystem.Connect;
+using LetterSendingSystem.Entities;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -27,7 +28,7 @@ namespace LetterSendingSystem
         {
             try
             {
-                listBoxUserLetters.ItemsSource = ConnectDB.GetListUserLetters(userSender.Id).Result;
+                listBoxUserLetters.ItemsSource = LetterRepository.GetListUserLetters(userSender.Id).Result;
             }
             catch (Exception ex)
             {
@@ -38,7 +39,7 @@ namespace LetterSendingSystem
         {
             try
             {
-                listBoxUserHistory.ItemsSource = ConnectDB.GetListUserHistory(userSender.Id).Result;
+                listBoxUserHistory.ItemsSource = LetterRepository.GetListUserHistory(userSender.Id).Result;
             }
             catch (Exception ex)
             {
@@ -53,7 +54,7 @@ namespace LetterSendingSystem
 
             try
             {
-                Countries = ConnectDB.GetListUser(searchText).Result;
+                Countries = UserRepository.GetListUser(searchText).Result;
             }
             catch (Exception ex)
             {
@@ -117,7 +118,7 @@ namespace LetterSendingSystem
                 Letter letter = new Letter() { Sender = userSender.Id, Recipient = userRecipient.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now };
                 try
                 {
-                    await ConnectDB.PostLetter(letter);
+                    await LetterRepository.PostLetter(letter);
                     
                     MessageBox.Show("Письмо успешно отправлено!", "Отправлено", MessageBoxButton.OK, MessageBoxImage.Information);
                     ClearTextBox();

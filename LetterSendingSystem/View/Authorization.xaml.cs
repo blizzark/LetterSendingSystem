@@ -16,7 +16,7 @@ using LetterSendingSystem.Entities;
 using LetterSendingSystem.JsonItems;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
+using LetterSendingSystem.Connect;
 
 namespace LetterSendingSystem
 {
@@ -37,7 +37,7 @@ namespace LetterSendingSystem
             {
                 string json = r.ReadToEnd();
                 ServerData serverData = JsonSerializer.Deserialize<ServerData>(json)!;   
-                ConnectDB.hostName = serverData.ServerUrl;
+                Request.hostName = serverData.ServerUrl;
             }
         }
 
@@ -50,7 +50,7 @@ namespace LetterSendingSystem
 
             try
             {
-                User? user = ConnectDB.GetUser(login, password).Result;
+                User? user = UserRepository.Auth(login, password).Result;
                 if (user != null)
                 {
                     MailForm win = new MailForm(user);

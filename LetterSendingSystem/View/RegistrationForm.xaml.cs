@@ -1,4 +1,5 @@
-﻿using LetterSendingSystem.Entities;
+﻿using LetterSendingSystem.Connect;
+using LetterSendingSystem.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -55,7 +56,7 @@ namespace LetterSendingSystem
                 try
                 {
                     user.Password = LetterSendingSystem.MD5.GetHash(user.Password);
-                    user = ConnectDB.CreateUser(user).Result!;
+                    user = UserRepository.CreateUser(user).Result!;
 
                     MessageBox.Show("Пользователь создан!", "Успешная регистрация", MessageBoxButton.OK, MessageBoxImage.Information);
                     MailForm win = new MailForm(user);
