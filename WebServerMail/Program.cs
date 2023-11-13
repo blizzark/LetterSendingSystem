@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebServerMail;
+using WebServerMail.Options;
 
 #region builderEntity
 var builderEntity = new ConfigurationBuilder();
@@ -197,12 +198,5 @@ app.MapPost("/api/create/user", [Authorize] (User user) =>
 app.Run();
 
 
-public class AuthOptions
-{
-    public const string ISSUER = "localhost"; // издатель токена
-    public const string AUDIENCE = "LetterSendingSystem"; // потребитель токена
-    const string KEY = "7hHLsZBS5AsHqsDKBgwj7g";   // ключ для шифрации
-    public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
-}
+
 
