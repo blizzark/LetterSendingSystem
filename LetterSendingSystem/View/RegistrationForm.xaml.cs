@@ -49,7 +49,7 @@ namespace LetterSendingSystem
                 {
                     errorMessage.Append(error.ErrorMessage + '\n');
                 }
-                MailForm.ErrorMessegeBox(errorMessage.ToString());
+                App.ErrorMessegeBox(errorMessage.ToString());
             }
             else
             {
@@ -66,7 +66,7 @@ namespace LetterSendingSystem
                 }
                 catch(Exception ex)
                 {
-                    MailForm.ErrorMessegeBox(ex.Message);
+                    App.ErrorMessegeBox(ex.Message);
                 }
 
 

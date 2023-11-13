@@ -13,5 +13,10 @@ namespace LetterSendingSystem
     /// </summary>
     public partial class App : Application
     {
+        public static void ErrorMessegeBox(string mes)
+        {
+            MessageBox.Show(mes, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
+
 }

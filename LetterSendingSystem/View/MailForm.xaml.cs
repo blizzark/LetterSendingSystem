@@ -32,7 +32,7 @@ namespace LetterSendingSystem
             }
             catch (Exception ex)
             {
-                ErrorMessegeBox(ex.Message);
+                App.ErrorMessegeBox(ex.Message);
             }
         }
         private void UpdateListBoxUserHistory()
@@ -43,7 +43,7 @@ namespace LetterSendingSystem
             }
             catch (Exception ex)
             {
-                ErrorMessegeBox(ex.Message);
+                App.ErrorMessegeBox(ex.Message);
             }
         }
         private List<User>? GetFilteredCountries(string searchText)
@@ -58,7 +58,7 @@ namespace LetterSendingSystem
             }
             catch (Exception ex)
             {
-                ErrorMessegeBox(ex.Message);
+                App.ErrorMessegeBox(ex.Message);
             }
 
             if (Countries == null)
@@ -95,10 +95,7 @@ namespace LetterSendingSystem
             }
         }
 
-        public static void ErrorMessegeBox(string mes)
-        {
-            MessageBox.Show(mes, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+
         private void ClearTextBox()
         {
             ComboNameRecipient.Text = string.Empty;
@@ -110,7 +107,7 @@ namespace LetterSendingSystem
         {
             if (ComboNameRecipient.Text == string.Empty)
             {
-                ErrorMessegeBox("Выберите получателя письма!");
+                App.ErrorMessegeBox("Выберите получателя письма!");
                 return;
             }
             if ((User)ComboNameRecipient.SelectedItem is User userRecipient)
@@ -127,13 +124,13 @@ namespace LetterSendingSystem
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessegeBox(ex.Message);
+                    App.ErrorMessegeBox(ex.Message);
                 }
 
             }
             else
             {
-                ErrorMessegeBox("Выберите получателя письмаfff!");
+                App.ErrorMessegeBox("Выберите получателя письма!");
                 return;
             }
 
