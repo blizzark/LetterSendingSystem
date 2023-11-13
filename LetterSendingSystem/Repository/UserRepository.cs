@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LetterSendingSystem.Entities;
 using System.Net.Http.Json;
+using LetterSendingSystem.Helper;
 
 namespace LetterSendingSystem.Connect
 {

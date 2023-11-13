@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LetterSendingSystem.Connect
+namespace LetterSendingSystem.Helper
 {
     internal static class Request
     {
