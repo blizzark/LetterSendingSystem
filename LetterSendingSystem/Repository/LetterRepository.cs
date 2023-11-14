@@ -13,7 +13,7 @@ namespace LetterSendingSystem.Connect
         {
             using var response = await Request.Get($"{Request.hostName}{Routes.LETTERS}{userId}").ConfigureAwait(false);
 
-            if (Request.CheckStatus(response) is null)
+            if (response is null)
                 return null;
 
             return await response.Content.ReadFromJsonAsync<List<Letter>>();
@@ -25,7 +25,7 @@ namespace LetterSendingSystem.Connect
 
             using var response = await Request.Get($"{Request.hostName}{Routes.HISTORY}{userId}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
-            if (Request.CheckStatus(response) is null)
+            if ( response is null)
                 return null;
 
 
@@ -36,9 +36,6 @@ namespace LetterSendingSystem.Connect
         public static async Task PostLetter(Letter letter)
         {
             using var response = await Request.Post($"{Request.hostName}{Routes.SEND_LETTER}", letter).ConfigureAwait(false);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new System.Exception($"Ошибка на сервере {response.StatusCode}");
         }
     }
 }

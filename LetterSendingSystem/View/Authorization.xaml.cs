@@ -45,7 +45,7 @@ namespace LetterSendingSystem
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
             string login = loginTextBox.Text;
-            string password = LetterSendingSystem.MD5.GetHash(passwordBox.Password);
+            string password = MD5.GetHash(passwordBox.Password);
 
 
 

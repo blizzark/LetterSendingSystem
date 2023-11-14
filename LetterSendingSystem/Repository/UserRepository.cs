@@ -16,10 +16,10 @@ namespace LetterSendingSystem.Connect
             using var response = await Request.Get($"{Request.hostName}{Routes.USERS}{login}/{password}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
 
-            if (Request.CheckStatus(response) is null)
+            if (response is null)
                 return null;
 
-            var userAndTocken = await response.Content.ReadFromJsonAsync<UserAndTocken>();
+            var userAndTocken = await response.Content.ReadFromJsonAsync<UserAndToken>();
 
             User user = userAndTocken!.User;
             Request.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userAndTocken.access_token);
@@ -31,7 +31,7 @@ namespace LetterSendingSystem.Connect
         {
             using var response = await Request.Get($"{Request.hostName}{Routes.USERS}{UserId}").ConfigureAwait(false);
 
-            if (Request.CheckStatus(response) is null)
+            if (response is null)
                 return null;
             return await response.Content.ReadFromJsonAsync<User>();
 
@@ -41,7 +41,7 @@ namespace LetterSendingSystem.Connect
         {
             using var response = await Request.Get($"{Request.hostName}{Routes.SEARCH}{searchText}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
-            if (Request.CheckStatus(response) is null)
+            if (response is null)
                 return null;
 
             return await response.Content.ReadFromJsonAsync<List<User>>();
@@ -52,8 +52,8 @@ namespace LetterSendingSystem.Connect
         {
             using var response = await Request.Post($"{Request.hostName}{Routes.CREATE_USER}", user).ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
-            if (response.StatusCode != HttpStatusCode.OK)
-                throw new System.Exception($"Ошибка на сервере {response.StatusCode}");
+            if (response is null)
+                return null;
 
             return await response.Content.ReadFromJsonAsync<User>();
         }

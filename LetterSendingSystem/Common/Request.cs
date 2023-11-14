@@ -27,14 +27,14 @@ namespace LetterSendingSystem.Helper
             }
         }
 
-        public async static Task<HttpResponseMessage> Get(string url)
+        public async static Task<HttpResponseMessage?> Get(string url)
         {
-            return await Client.GetAsync(url).ConfigureAwait(false);
+            return CheckStatus(await Client.GetAsync(url).ConfigureAwait(false));
         }
 
-        public async static Task<HttpResponseMessage> Post(string url, object obj)
+        public async static Task<HttpResponseMessage?> Post(string url, object obj)
         {
-            return await Client.PostAsJsonAsync(url, obj).ConfigureAwait(false);
+            return CheckStatus(await Client.PostAsJsonAsync(url, obj).ConfigureAwait(false));
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 
-namespace LetterSendingSystem
+namespace LetterSendingSystem.Helper
 {
     public class MD5
     {

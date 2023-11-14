@@ -7,7 +7,7 @@ using LetterSendingSystem.Entities;
 
 namespace LetterSendingSystem.JsonItems
 {
-    public class UserAndTocken
+    public class UserAndToken
     {
         public string access_token { get; set; } = null!;
         public User User { get; set; } = null!;
