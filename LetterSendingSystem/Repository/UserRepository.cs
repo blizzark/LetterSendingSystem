@@ -9,12 +9,20 @@ using System.Threading.Tasks;
 
 namespace LetterSendingSystem.Connect
 {
+    /// <summary>
+    /// Repository for working with users
+    /// </summary>
     internal static class UserRepository
     {
+        /// <summary>
+        /// Authorization and receiving a token
+        /// </summary>
+        /// <param name="client"></param>
+        /// <returns></returns>
         public static async Task<User?> Auth(RestClient client)
         {
             using var response = await Request.Post($"{Request.hostName}{Routes.AUTH}", client).ConfigureAwait(false);
-            // если объект на сервере найден, то есть статусный код равен 404
+
 
             if (response is null)
                 return null;
@@ -26,7 +34,11 @@ namespace LetterSendingSystem.Connect
             return user;
 
         }
-
+        /// <summary>
+        /// Returns the user by his ID
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
         public static async Task<User?> GetUser(int UserId)
         {
             using var response = await Request.Get($"{Request.hostName}{Routes.USERS}{UserId}").ConfigureAwait(false);
@@ -37,6 +49,11 @@ namespace LetterSendingSystem.Connect
 
         }
 
+        /// <summary>
+        /// Returns a list of users who have an occurrence string in their first/last name/mail
+        /// </summary>
+        /// <param name="searchText">occurrence string</param>
+        /// <returns></returns>
         public static async Task<List<User>?> GetListUser(string searchText)
         {
             using var response = await Request.Get($"{Request.hostName}{Routes.SEARCH}{searchText}").ConfigureAwait(false);
@@ -48,6 +65,11 @@ namespace LetterSendingSystem.Connect
 
         }
 
+        /// <summary>
+        /// Creates and immediately authorizes a new user on the server
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static async Task<User?> CreateUser(User user)
         {
             using var response = await Request.Post($"{Request.hostName}{Routes.CREATE_USER}", user).ConfigureAwait(false);

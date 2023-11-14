@@ -8,6 +8,9 @@ using System.Xml.Linq;
 
 namespace LetterSendingSystem.Entities
 {
+    /// <summary>
+    /// User model in the database
+    /// </summary>
     public class User
     {
         public int Id { get; set; }

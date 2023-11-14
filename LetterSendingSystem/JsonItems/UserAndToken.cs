@@ -7,6 +7,9 @@ using LetterSendingSystem.Entities;
 
 namespace LetterSendingSystem.JsonItems
 {
+    /// <summary>
+    /// Class to convert a json file to a user and token
+    /// </summary>
     public class UserAndToken
     {
         public string AccessToken { get; set; } = null!;

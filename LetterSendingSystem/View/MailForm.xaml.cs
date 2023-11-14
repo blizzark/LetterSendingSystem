@@ -17,11 +17,16 @@ namespace LetterSendingSystem
     /// </summary>
     public partial class MailForm : Window
     {
+        //List of received letters
         private ObservableCollection<Letter> UserLetters { get; set; } = null!;
+        //List of sent letters
         private ObservableCollection<Letter> UserHistory { get; set; } = null!;
+        //Current authorized user. He's the sender.
         private User userSender { get; set; }
 
+        //Current page for viewing received emails
         private int pageListBoxUserLetters = 0;
+        //Current page for viewing sent emails
         private int pageListBoxUserHistory = 0;
         public MailForm(User user)
         {
@@ -30,8 +35,10 @@ namespace LetterSendingSystem
 
           
             Title = $"Здравствуйте, {user.FirstName}!";
-            LoadListBoxUserLetters();
-            LoadListBoxUserHistory();
+            UserLetters = LoadListBoxUserLetters();
+            UserHistory = LoadListBoxUserHistory();
+            listBoxUserLetters.ItemsSource = UserLetters;
+            listBoxUserHistory.ItemsSource = UserHistory;
 
         }
 
@@ -39,56 +46,55 @@ namespace LetterSendingSystem
 
 
 
-
-        private void LoadListBoxUserLetters()
+        /// <summary>
+        /// Loads the first sample of received emails.
+        /// </summary>
+        /// <returns>A sample if there is one. Empty selection if there is none</returns>
+        private ObservableCollection<Letter> LoadListBoxUserLetters()
         {
+            List<Letter>? letters = null;
             try
             {
-
-                var letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserLetters++).Result;
-                if (letters is null)
-                {
-                    UserLetters = new ObservableCollection<Letter>();
-                    listBoxUserLetters.ItemsSource = UserLetters;
-                    return;
-                }
- 
-                UserLetters = new ObservableCollection<Letter>(letters);
-                  listBoxUserLetters.ItemsSource = UserLetters;
-            
+                letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserLetters++).Result;
             }
             catch (Exception ex)
             {
                 App.ErrorMessegeBox(ex.Message);
             }
+            if (letters is null)
+                return new ObservableCollection<Letter>();
+            return new ObservableCollection<Letter>(letters);
         }
 
-
-        private void LoadListBoxUserHistory()
+        /// <summary>
+        /// Loads the first sample of sent emails.
+        /// </summary>
+        /// <returns>A sample if there is one. Empty selection if there is none</returns>
+        private ObservableCollection<Letter> LoadListBoxUserHistory()
         {
+            List<Letter>? letters = null;
             try
             {
-                var letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserHistory++).Result;
-
-                if (letters is null)
-                {
-                    UserHistory = new ObservableCollection<Letter>();
-                    listBoxUserHistory.ItemsSource = UserHistory;
-                    return;
-                }
-                
-                UserHistory = new ObservableCollection<Letter>(letters);
-                listBoxUserHistory.ItemsSource = UserHistory;
+                letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserHistory++).Result;
             }
             catch (Exception ex)
             {
                 App.ErrorMessegeBox(ex.Message);
             }
+
+            if (letters is null)
+                return new ObservableCollection<Letter>();
+            return new ObservableCollection<Letter>(letters);
+
         }
+
+        /// <summary>
+        /// Sends a request to search for the occurrence of a line in a full name or email
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <returns></returns>
         private List<User>? GetFilteredCountries(string searchText)
         {
-
-
             List<User>? Countries = null;
 
             try
@@ -105,7 +111,14 @@ namespace LetterSendingSystem
 
             return Countries;
         }
+
+        //Variable required for the search to work correctly
         private bool selectedComboBoxNameRecipient = false;
+        /// <summary>
+        /// User search and selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -139,7 +152,9 @@ namespace LetterSendingSystem
             }
         }
 
-
+        /// <summary>
+        /// Clearing the letter form
+        /// </summary>
         private void ClearTextBox()
         {
             ComboNameRecipient.Text = string.Empty;
@@ -147,6 +162,11 @@ namespace LetterSendingSystem
             bodyTextBox.Text = string.Empty;
         }
 
+        /// <summary>
+        /// Button to send a form with a letter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ButtonSendLetter_Click(object sender, RoutedEventArgs e)
         {
             if (ComboNameRecipient.Text == string.Empty)
@@ -179,7 +199,11 @@ namespace LetterSendingSystem
             }
 
         }
-
+        /// <summary>
+        /// Event of opening an existing message
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListBoxUserLetters_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (listBoxUserLetters.SelectedItem is Letter letter)
@@ -195,6 +219,11 @@ namespace LetterSendingSystem
             }
         }
 
+        /// <summary>
+        /// Event of opening an existing message
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListBoxUserHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (listBoxUserHistory.SelectedItem is Letter letter)
@@ -211,6 +240,11 @@ namespace LetterSendingSystem
             }
         }
 
+        /// <summary>
+        /// Logout event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExitToAuth_Click(object sender, RoutedEventArgs e)
         {
             Authorization win = new Authorization();
@@ -219,12 +253,21 @@ namespace LetterSendingSystem
             this.Close();
         }
 
+        /// <summary>
+        /// Flag setting event if a user has been selected for sending
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ComboNameRecipient_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectedComboBoxNameRecipient = true;
         }
 
-
+        /// <summary>
+        /// Scroll event ListView
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             var scrollViewer = (ScrollViewer)sender;
@@ -236,13 +279,18 @@ namespace LetterSendingSystem
             {
                 scrollViewer.LineDown();
             }
-            // Остановить обработку события прокрутки родительским элементом.
+           
             e.Handled = true;
         }
 
+        /// <summary>
+        /// Receiving a sample of letters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ScrollViewerHistory_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            // Проверяем, достигли ли мы конца ListView при прокрутке
+            // Checking to see if we have reached the end of the ListView
             if (scrollViewerHistory.VerticalOffset == scrollViewerHistory.ScrollableHeight)
             {
                 try
@@ -265,7 +313,11 @@ namespace LetterSendingSystem
                 }
             }
         }
-
+        /// <summary>
+        /// Receiving a sample of letters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ScrollViewerLetters_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             // Проверяем, достигли ли мы конца ListView при прокрутке

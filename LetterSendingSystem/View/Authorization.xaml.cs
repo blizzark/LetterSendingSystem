@@ -32,6 +32,9 @@ namespace LetterSendingSystem
             LoadJson();
         }
 
+        /// <summary>
+        /// Loading a link to the server from a file
+        /// </summary>
         public void LoadJson()
         {
             using (StreamReader r = new StreamReader(System.AppDomain.CurrentDomain.BaseDirectory + "appsettings.json"))
@@ -42,6 +45,11 @@ namespace LetterSendingSystem
             }
         }
 
+        /// <summary>
+        /// Authorization confirmation button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
             string login = loginTextBox.Text;
@@ -70,6 +78,11 @@ namespace LetterSendingSystem
             }
         }
 
+        /// <summary>
+        /// Button opening the registration form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RegistrationButton_Click(object sender, RoutedEventArgs e)
         {
             RegistrationForm win = new RegistrationForm();

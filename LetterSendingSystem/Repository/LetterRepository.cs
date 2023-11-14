@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace LetterSendingSystem.Connect
 {
+    /// <summary>
+    /// Repository for working with letters
+    /// </summary>
     internal static class LetterRepository
     {
+        /// <summary>
+        /// Returns a selection of letters received by the user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="page">Sample page</param>
+        /// <returns></returns>
         public static async Task<List<Letter>?> GetListUserLetters(int userId, int page)
         {
             using var response = await Request.Get($"{Request.hostName}{Routes.LETTERS}{userId}/{page}").ConfigureAwait(false);
@@ -19,7 +28,12 @@ namespace LetterSendingSystem.Connect
             return await response.Content.ReadFromJsonAsync<List<Letter>>();
 
         }
-
+        /// <summary>
+        /// Returns a selection of letters sent by the user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public static async Task<List<Letter>?> GetListUserHistory(int userId, int page)
         {
 
@@ -33,6 +47,11 @@ namespace LetterSendingSystem.Connect
 
         }
 
+        /// <summary>
+        /// Sends a letter to the server
+        /// </summary>
+        /// <param name="letter"></param>
+        /// <returns></returns>
         public static async Task SendLetter(Letter letter)
         {
             using var response = await Request.Post($"{Request.hostName}{Routes.SEND_LETTER}", letter).ConfigureAwait(false);

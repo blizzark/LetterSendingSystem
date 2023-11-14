@@ -7,6 +7,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace LetterSendingSystem.Entities
 {
+    /// <summary>
+    /// Letter model in the database
+    /// </summary>
     internal class Letter
     {
         public int Id { get; set; }

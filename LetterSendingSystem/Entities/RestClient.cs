@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LetterSendingSystem.Entities
 {
+    /// <summary>
+    /// Class for wrapping authorization data
+    /// </summary>
     public class RestClient
     {
         public string Login { get; set; } = null!;

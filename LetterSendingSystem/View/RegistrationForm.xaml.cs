@@ -27,7 +27,11 @@ namespace LetterSendingSystem
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Return event to the authorization form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void returnToAuthButton_Click(object sender, RoutedEventArgs e)
         {
             Authorization win = new Authorization();
@@ -35,7 +39,11 @@ namespace LetterSendingSystem
             win.ShowDialog();
             this.Close();
         }
-
+        /// <summary>
+        /// Registration event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void registerButton_Click(object sender, RoutedEventArgs e)
         {
             User user = new User() {FirstName = firstNameBox.Text, SecondName = secondNameBox.Text,

@@ -30,7 +30,7 @@ namespace WebServerMail.Controllers
             var identity = GetIdentity(user);
 
             var now = DateTime.UtcNow;
-            // создаем JWT-токен
+
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
@@ -66,11 +66,11 @@ namespace WebServerMail.Controllers
         public IResult GetUser(int id)
         {
 
-                // получаем пользователя по id
+              
                 User? user = db.Users.Find(id);
-                // если не найден, отправляем статусный код и сообщение об ошибке
+             
                 if (user == null) return Results.NotFound(new { message = "Пользователь не найден" });
-                // если пользователь найден, отправляем его
+            
                 return Results.Json(user);  
         }
 
@@ -80,11 +80,9 @@ namespace WebServerMail.Controllers
         {
 
             List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).Take(5).ToList();
-            //List<User> users = db.Users.Where(x => x.FirstName.StartsWith(searchText) || x.SecondName.StartsWith(searchText) || x.Email.StartsWith(searchText)).ToList();
             if (users.Count == 0) return Results.NotFound(new { message = "Пользователи не найдены" });
 
 
-            // если пользователь найден, отправляем его
             return Results.Json(users);
         }
 

@@ -7,9 +7,17 @@ using System.Security.Cryptography;
 
 namespace LetterSendingSystem.Helper
 {
+    /// <summary>
+    /// Class for creating a password hash
+    /// </summary>
     public class MD5
     {
-        public static string password = "";
+
+        /// <summary>
+        /// Creates a hash by string
+        /// </summary>
+        /// <param name="input">Usually the password</param>
+        /// <returns>hash</returns>
         public static string GetHash(string input)
         {
             var md5 = System.Security.Cryptography.MD5.Create();

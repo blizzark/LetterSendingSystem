@@ -17,28 +17,19 @@ builderASP.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // указывает, будет ли валидироваться издатель при валидации токена
             ValidateIssuer = true,
-            // строка, представляющая издателя
             ValidIssuer = AuthOptions.ISSUER,
-            // будет ли валидироваться потребитель токена
             ValidateAudience = true,
-            // установка потребителя токена
             ValidAudience = AuthOptions.AUDIENCE,
-            // будет ли валидироваться время существования
             ValidateLifetime = true,
-            // установка ключа безопасности
             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            // валидация ключа безопасности
             ValidateIssuerSigningKey = true,
         };
     });
 #endregion
 
 
-// получаем строку подключения из файла конфигурации
 string connection = builderASP.Configuration.GetConnectionString("DefaultConnection")!;
-// добавляем контекст ApplicationContext в качестве сервиса в приложение
 builderASP.Services.AddDbContext<MailDbContext>(options => options.UseSqlServer(connection));
 
 builderASP.Services.AddControllersWithViews();
