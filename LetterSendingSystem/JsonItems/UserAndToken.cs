@@ -9,7 +9,7 @@ namespace LetterSendingSystem.JsonItems
 {
     public class UserAndToken
     {
-        public string access_token { get; set; } = null!;
+        public string AccessToken { get; set; } = null!;
         public User User { get; set; } = null!;
     }
 }

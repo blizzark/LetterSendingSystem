@@ -22,7 +22,7 @@ namespace LetterSendingSystem.Connect
             var userAndTocken = await response.Content.ReadFromJsonAsync<UserAndToken>();
 
             User user = userAndTocken!.User;
-            Request.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userAndTocken.access_token);
+            Request.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userAndTocken.AccessToken);
             return user;
 
         }
