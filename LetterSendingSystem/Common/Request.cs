@@ -22,18 +22,12 @@ namespace LetterSendingSystem.Helper
         public static HttpResponseMessage? CheckStatus(HttpResponseMessage response)
         {
             if (response.StatusCode == HttpStatusCode.NotFound || response.StatusCode == HttpStatusCode.Unauthorized)
-            {
                 return null;
-
-            }
             else if (response.StatusCode == HttpStatusCode.OK)
-            {
                 return response;
-            }
-            else
-            {
+            else 
                 throw new System.Exception($"Ошибка на сервере {response.StatusCode}");
-            }
+            
         }
 
         /// <summary>

@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="Авторизация" Height="276" Width="350" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" ResizeMode="NoResize">
     <Grid>
-        <TextBox x:Name="loginTextBox" Text="sergal@ya.ru" HorizontalAlignment="Center" Margin="0,45,0,0"  VerticalAlignment="Top" Width="287" Height="31" FontSize="18" MaxLength="50" AutomationProperties.IsRowHeader="True" AcceptsReturn="False"/>
-        <PasswordBox x:Name="passwordBox" Password="user" HorizontalAlignment="Center" VerticalAlignment="Top" Width="288" Height="31
+        <TextBox x:Name="loginTextBox" Text="" HorizontalAlignment="Center" Margin="0,45,0,0"  VerticalAlignment="Top" Width="287" Height="31" FontSize="18" MaxLength="50" AutomationProperties.IsRowHeader="True" AcceptsReturn="False"/>
+        <PasswordBox x:Name="passwordBox" Password="" HorizontalAlignment="Center" VerticalAlignment="Top" Width="288" Height="31
                      " Margin="0,104,0,0" FontSize="18" MaxLength="50"/>
         <Button x:Name="ButtonEnter" Content="Вход" HorizontalAlignment="Center" VerticalAlignment="Top" Height="37" Width="84" Margin="0,189,0,0" Click="ButtonEnter_Click" FontSize="16"/>
         <Label Content="Почта:" HorizontalAlignment="Left" Margin="31,14,0,0" VerticalAlignment="Top" FontSize="16"/>

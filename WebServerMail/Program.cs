@@ -9,10 +9,10 @@ using WebServerMail;
 using WebServerMail.Options;
 
 #region builderASP
-var builderASP = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder();
 
-builderASP.Services.AddAuthorization();
-builderASP.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -29,12 +29,12 @@ builderASP.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 #endregion
 
 
-string connection = builderASP.Configuration.GetConnectionString("DefaultConnection")!;
-builderASP.Services.AddDbContext<MailDbContext>(options => options.UseSqlServer(connection));
+string connection = builder.Configuration.GetConnectionString("DefaultConnection")!;
+builder.Services.AddDbContext<MailDbContext>(options => options.UseSqlServer(connection));
 
-builderASP.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();
 
-var app = builderASP.Build();
+var app = builder.Build();
 
 
 app.UseAuthentication();

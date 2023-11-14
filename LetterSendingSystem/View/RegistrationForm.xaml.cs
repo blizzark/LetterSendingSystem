@@ -48,19 +48,8 @@ namespace LetterSendingSystem
         {
             User user = new User() {FirstName = firstNameBox.Text, SecondName = secondNameBox.Text,
                 Email = eMailBox.Text, Password = passwordBox.Password, ConfirmPassword = confirmPasswordBox.Password };
-            var results = new List<ValidationResult>();
-            var context = new ValidationContext(user);
 
-            if (!Validator.TryValidateObject(user, context, results, true))
-            {
-                StringBuilder errorMessage = new StringBuilder();
-                foreach (var error in results)
-                {
-                    errorMessage.Append(error.ErrorMessage + '\n');
-                }
-                App.ErrorMessegeBox(errorMessage.ToString());
-            }
-            else
+            if (App.ValidateObject(user))
             {
                 try
                 {

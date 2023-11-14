@@ -25,7 +25,7 @@ namespace WebServerMail.Controllers
         {
             User? user = db.Users.FirstOrDefault(u => u.Email == client.Login && u.Password == client.Password);
             if (user is null)
-                return BadRequest(new { errorText = "Invalid login or password." }); ;
+                return Unauthorized(new { errorText = "Invalid login or password." });
 
             var identity = GetIdentity(user);
 

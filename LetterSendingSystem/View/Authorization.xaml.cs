@@ -55,26 +55,28 @@ namespace LetterSendingSystem
             string login = loginTextBox.Text;
             string password = MD5.GetHash(passwordBox.Password);
 
-
-
-            try
+            RestClient restClient = new RestClient() { Login = login, Password = password };
+            if (App.ValidateObject(restClient))
             {
-                User? user = UserRepository.Auth(new RestClient() {Login = login, Password = password }).Result;
-                if (user != null)
+                try
                 {
-                    MailForm win = new MailForm(user);
-                    this.Hide();
-                    win.ShowDialog();
-                    this.Close();
+                    User? user = UserRepository.Auth(restClient).Result;
+                    if (user != null)
+                    {
+                        MailForm win = new MailForm(user);
+                        this.Hide();
+                        win.ShowDialog();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Пользователь не найден!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Пользователь не найден!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
