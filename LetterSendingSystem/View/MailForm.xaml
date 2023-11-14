@@ -22,8 +22,8 @@
                 </TabItem>
                 <TabItem Name="incomingTab" Header="Входящие" FontSize="16">
                     <Grid>
-                        <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_ScrollChanged">
-                            <ListView x:Name="listBoxUserLetters" SelectionChanged="listBoxUserLetters_SelectionChanged" ItemsSource="{Binding UserLetters}"  >
+                        <ScrollViewer x:Name="scrollViewerLetters" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewerLetters_ScrollChanged">
+                            <ListView x:Name="listBoxUserLetters" SelectionChanged="ListBoxUserLetters_SelectionChanged" ItemsSource="{Binding UserLetters}"  >
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn DisplayMemberBinding="{Binding Path=EmailSender}"  Width="auto">От кого</GridViewColumn>
@@ -38,8 +38,8 @@
 
                 <TabItem Name="outgoingTab" Header="Отправленные" FontSize="16">
                     <Grid>
-                        <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_ScrollChanged">
-                            <ListView x:Name="listBoxUserHistory" SelectionChanged="listBoxUserHistory_SelectionChanged" ItemsSource="{Binding UserHistory}" >
+                        <ScrollViewer x:Name="scrollViewerHistory" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewerHistory_ScrollChanged">
+                            <ListView x:Name="listBoxUserHistory" SelectionChanged="ListBoxUserHistory_SelectionChanged" ItemsSource="{Binding UserHistory}" >
 
                             <ListView.View>
                                 <GridView>

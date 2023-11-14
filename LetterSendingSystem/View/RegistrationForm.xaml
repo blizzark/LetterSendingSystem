@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LetterSendingSystem"
         mc:Ignorable="d"
-        Title="Регистрация" Height="450" Width="261" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="Регистрация" Height="419" Width="261" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
         <Label Content="Ваше имя:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="16"/>
         <TextBox x:Name="firstNameBox" HorizontalAlignment="Center" Margin="0,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="227" Height="27" FontSize="16" MaxLength="20"/>
@@ -17,8 +17,14 @@
         <PasswordBox x:Name="passwordBox" HorizontalAlignment="Center" Margin="0,217,0,0" VerticalAlignment="Top" Width="227" Height="27" MaxLength="50"/>
         <Label Content="Повторите пароль:" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top" FontSize="16"/>
         <PasswordBox x:Name="confirmPasswordBox" HorizontalAlignment="Center" Margin="0,275,0,0" VerticalAlignment="Top" Width="227" Height="27" MaxLength="50"/>
-        <Button x:Name="registerButton" Content="Подтвердить" Margin="60,336,17,0" FontSize="16" Height="32" VerticalAlignment="Top" Click="registerButton_Click"/>
-        <Button x:Name="returnToAuthButton" Content="" Margin="17,336,212,0" FontSize="16" Click="returnToAuthButton_Click" Height="32" VerticalAlignment="Top"/>
+        <Grid  Margin="7,299,-7,-32">
+            <Button x:Name="registerButton" Content="Подтвердить" Margin="0,0,17,56" FontSize="16" Click="registerButton_Click" Height="33" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="184"/>
+            <Button x:Name="returnToAuthButton"  Margin="0,0,212,56" FontSize="16" Click="returnToAuthButton_Click" Height="33" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="32">
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="20" Height="20" Source="/View/789619.png"/>
+                </StackPanel>
+            </Button>
+        </Grid>
 
     </Grid>
 </Window>

@@ -5,10 +5,20 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>View\Pictures\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="View\789619.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="View\Pictures\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="View\789619.png" />
   </ItemGroup>
 
 </Project>

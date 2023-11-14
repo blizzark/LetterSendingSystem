@@ -17,8 +17,8 @@ namespace LetterSendingSystem
     /// </summary>
     public partial class MailForm : Window
     {
-        private ObservableCollection<Letter>? UserLetters { get; set; }
-        private ObservableCollection<Letter>? UserHistory { get; set; }
+        private ObservableCollection<Letter> UserLetters { get; set; } = null!;
+        private ObservableCollection<Letter> UserHistory { get; set; } = null!;
         private User userSender { get; set; }
 
         private int pageListBoxUserLetters = 0;
@@ -27,7 +27,8 @@ namespace LetterSendingSystem
         {
             this.userSender = user;
             InitializeComponent();
-           
+
+          
             Title = $"Здравствуйте, {user.FirstName}!";
             LoadListBoxUserLetters();
             LoadListBoxUserHistory();
@@ -43,15 +44,18 @@ namespace LetterSendingSystem
         {
             try
             {
-                var letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserLetters).Result;
+
+                var letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserLetters++).Result;
                 if (letters is null)
                 {
                     UserLetters = new ObservableCollection<Letter>();
                     listBoxUserLetters.ItemsSource = UserLetters;
                     return;
                 }
+ 
                 UserLetters = new ObservableCollection<Letter>(letters);
-                listBoxUserLetters.ItemsSource = UserLetters;
+                  listBoxUserLetters.ItemsSource = UserLetters;
+            
             }
             catch (Exception ex)
             {
@@ -64,13 +68,15 @@ namespace LetterSendingSystem
         {
             try
             {
-                var letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserLetters).Result;
+                var letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserHistory++).Result;
+
                 if (letters is null)
                 {
                     UserHistory = new ObservableCollection<Letter>();
                     listBoxUserHistory.ItemsSource = UserHistory;
                     return;
                 }
+                
                 UserHistory = new ObservableCollection<Letter>(letters);
                 listBoxUserHistory.ItemsSource = UserHistory;
             }
@@ -150,14 +156,14 @@ namespace LetterSendingSystem
             }
             if ((User)ComboNameRecipient.SelectedItem is User userRecipient)
             {
-                Letter letter = new Letter() { Sender = userSender.Id, Recipient = userRecipient.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now };
+                Letter letter = new Letter() { Sender = userSender.Id, Recipient = userRecipient.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now, EmailSender = userRecipient.Email};
                 try
                 {
                     await LetterRepository.SendLetter(letter);
                     
                     MessageBox.Show("Письмо успешно отправлено!", "Отправлено", MessageBoxButton.OK, MessageBoxImage.Information);
                     ClearTextBox();
-                    UserHistory?.Add(letter);
+                    UserHistory.Insert(0,letter);
                     tabControl.SelectedItem = incomingTab;
                 }
                 catch (Exception ex)
@@ -174,7 +180,7 @@ namespace LetterSendingSystem
 
         }
 
-        private void listBoxUserLetters_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListBoxUserLetters_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (listBoxUserLetters.SelectedItem is Letter letter)
             {
@@ -189,7 +195,7 @@ namespace LetterSendingSystem
             }
         }
 
-        private void listBoxUserHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListBoxUserHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (listBoxUserHistory.SelectedItem is Letter letter)
             {
@@ -234,12 +240,55 @@ namespace LetterSendingSystem
             e.Handled = true;
         }
 
-        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        private void ScrollViewerHistory_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             // Проверяем, достигли ли мы конца ListView при прокрутке
-            if (e.VerticalOffset + e.ViewportHeight == e.ExtentHeight)
+            if (scrollViewerHistory.VerticalOffset == scrollViewerHistory.ScrollableHeight)
             {
-              
+                try
+                {
+                    var letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserHistory++).Result;
+
+                    if (letters is null)
+                        return;
+
+                    foreach (var lettersItem in letters)
+                    {
+                        UserHistory.Add(lettersItem);
+                    }
+
+                  
+                }
+                catch (Exception ex)
+                {
+                    App.ErrorMessegeBox(ex.Message);
+                }
+            }
+        }
+
+        private void ScrollViewerLetters_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            // Проверяем, достигли ли мы конца ListView при прокрутке
+            if (scrollViewerLetters.VerticalOffset == scrollViewerLetters.ScrollableHeight)
+            {
+                try
+                {
+                    var letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserHistory++).Result;
+
+                    if (letters is null)
+                        return;
+
+                    foreach (var lettersItem in letters)
+                    {
+                        UserLetters.Add(lettersItem);
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    App.ErrorMessegeBox(ex.Message);
+                }
             }
         }
     }
