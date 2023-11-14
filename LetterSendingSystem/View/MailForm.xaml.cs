@@ -2,9 +2,13 @@
 using LetterSendingSystem.Entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace LetterSendingSystem
 {
@@ -13,33 +17,62 @@ namespace LetterSendingSystem
     /// </summary>
     public partial class MailForm : Window
     {
+        private ObservableCollection<Letter>? UserLetters { get; set; }
+        private ObservableCollection<Letter>? UserHistory { get; set; }
         private User userSender { get; set; }
 
+        private int pageListBoxUserLetters = 0;
+        private int pageListBoxUserHistory = 0;
         public MailForm(User user)
         {
             this.userSender = user;
             InitializeComponent();
+           
             Title = $"Здравствуйте, {user.FirstName}!";
-            UpdateListBoxUserLetters();
-            UpdateListBoxUserHistory();
+            LoadListBoxUserLetters();
+            LoadListBoxUserHistory();
+
         }
 
-        private void UpdateListBoxUserLetters()
+
+
+
+
+
+        private void LoadListBoxUserLetters()
         {
             try
             {
-                listBoxUserLetters.ItemsSource = LetterRepository.GetListUserLetters(userSender.Id).Result;
+                var letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserLetters).Result;
+                if (letters is null)
+                {
+                    UserLetters = new ObservableCollection<Letter>();
+                    listBoxUserLetters.ItemsSource = UserLetters;
+                    return;
+                }
+                UserLetters = new ObservableCollection<Letter>(letters);
+                listBoxUserLetters.ItemsSource = UserLetters;
             }
             catch (Exception ex)
             {
                 App.ErrorMessegeBox(ex.Message);
             }
         }
-        private void UpdateListBoxUserHistory()
+
+
+        private void LoadListBoxUserHistory()
         {
             try
             {
-                listBoxUserHistory.ItemsSource = LetterRepository.GetListUserHistory(userSender.Id).Result;
+                var letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserLetters).Result;
+                if (letters is null)
+                {
+                    UserHistory = new ObservableCollection<Letter>();
+                    listBoxUserHistory.ItemsSource = UserHistory;
+                    return;
+                }
+                UserHistory = new ObservableCollection<Letter>(letters);
+                listBoxUserHistory.ItemsSource = UserHistory;
             }
             catch (Exception ex)
             {
@@ -124,7 +157,7 @@ namespace LetterSendingSystem
                     
                     MessageBox.Show("Письмо успешно отправлено!", "Отправлено", MessageBoxButton.OK, MessageBoxImage.Information);
                     ClearTextBox();
-                    UpdateListBoxUserHistory();
+                    UserHistory?.Add(letter);
                     tabControl.SelectedItem = incomingTab;
                 }
                 catch (Exception ex)
@@ -183,6 +216,31 @@ namespace LetterSendingSystem
         private void ComboNameRecipient_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             selectedComboBoxNameRecipient = true;
+        }
+
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            var scrollViewer = (ScrollViewer)sender;
+            if (e.Delta > 0)
+            {
+                scrollViewer.LineUp();
+            }
+            else
+            {
+                scrollViewer.LineDown();
+            }
+            // Остановить обработку события прокрутки родительским элементом.
+            e.Handled = true;
+        }
+
+        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            // Проверяем, достигли ли мы конца ListView при прокрутке
+            if (e.VerticalOffset + e.ViewportHeight == e.ExtentHeight)
+            {
+              
+            }
         }
     }
 }

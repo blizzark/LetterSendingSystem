@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LetterSendingSystem"
         mc:Ignorable="d"
-        Title="MailForm" Height="450" Width="800" MinWidth="800" MinHeight="450">
+        Title="MailForm" Height="450" Width="800" MinWidth="800" MinHeight="450" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid>
             <TabControl x:Name="tabControl" TabStripPlacement="Left" Margin="0, 0, 0, 10">
@@ -22,21 +22,25 @@
                 </TabItem>
                 <TabItem Name="incomingTab" Header="Входящие" FontSize="16">
                     <Grid>
-                        <ListView x:Name="listBoxUserLetters" SelectionChanged="listBoxUserLetters_SelectionChanged" >
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Path=EmailSender}"  Width="auto">От кого</GridViewColumn>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Titel}" Width="auto">Тема</GridViewColumn>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Date}" Width="auto">Дата</GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                        <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_ScrollChanged">
+                            <ListView x:Name="listBoxUserLetters" SelectionChanged="listBoxUserLetters_SelectionChanged" ItemsSource="{Binding UserLetters}"  >
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=EmailSender}"  Width="auto">От кого</GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=Titel}" Width="auto">Тема</GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=Date}" Width="auto">Дата</GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </ScrollViewer>
                     </Grid>
                 </TabItem>
 
                 <TabItem Name="outgoingTab" Header="Отправленные" FontSize="16">
                     <Grid>
-                        <ListView x:Name="listBoxUserHistory" SelectionChanged="listBoxUserHistory_SelectionChanged" >
+                        <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" ScrollChanged="ScrollViewer_ScrollChanged">
+                            <ListView x:Name="listBoxUserHistory" SelectionChanged="listBoxUserHistory_SelectionChanged" ItemsSource="{Binding UserHistory}" >
+
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn DisplayMemberBinding="{Binding Path=EmailSender}"  Width="auto" >Кому</GridViewColumn>
@@ -45,6 +49,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
+                        </ScrollViewer>
                     </Grid>
                 </TabItem>
 

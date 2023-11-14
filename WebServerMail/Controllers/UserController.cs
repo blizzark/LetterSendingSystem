@@ -79,7 +79,7 @@ namespace WebServerMail.Controllers
         public IResult GetListUser(string searchText)
         {
 
-            List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).ToList();
+            List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).Take(5).ToList();
             //List<User> users = db.Users.Where(x => x.FirstName.StartsWith(searchText) || x.SecondName.StartsWith(searchText) || x.Email.StartsWith(searchText)).ToList();
             if (users.Count == 0) return Results.NotFound(new { message = "Пользователи не найдены" });
 

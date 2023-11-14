@@ -12,11 +12,13 @@ namespace WebServerMail.Controllers
         {
             db = context;
         }
-        [HttpGet("get-list-user-letters/{userId}")]
-        public IResult GetListUserLetters(int userId)
+        [HttpGet("get-list-user-letters/{userId}/{page}")]
+        public IResult GetListUserLetters(int userId, int page)
         {
+            const int SKIP_TAKE_ELEMENTS = 20;
 
-            var letters = from letter in db.Letters
+
+            var letters = (from letter in db.Letters
                           join user in db.Users on letter.Recipient equals user.Id
                           where user.Id == userId
                           orderby letter.Date descending
@@ -26,17 +28,18 @@ namespace WebServerMail.Controllers
                               Titel = letter.Titel,
                               Text = letter.Text,
                               Date = letter.Date
-                          };
+                          }).Skip(page * SKIP_TAKE_ELEMENTS).Take(SKIP_TAKE_ELEMENTS);
 
             if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
 
             return Results.Json(letters.ToList());
         }
-        [HttpGet("get-list-user-history/{userId}")]
-        public IResult GetListUserHistory(int userId)
+        [HttpGet("get-list-user-history/{userId}/{page}")]
+        public IResult GetListUserHistory(int userId, int page)
         {
+            const int SKIP_TAKE_ELEMENTS = 20;
 
-            var letters = from letter in db.Letters
+            var letters = (from letter in db.Letters
                           join user in db.Users on letter.Sender equals user.Id
                           where user.Id == userId
                           orderby letter.Date descending
@@ -46,7 +49,7 @@ namespace WebServerMail.Controllers
                               Titel = letter.Titel,
                               Text = letter.Text,
                               Date = letter.Date
-                          };
+                          }).Skip(page * SKIP_TAKE_ELEMENTS).Take(SKIP_TAKE_ELEMENTS);
 
             if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
 
