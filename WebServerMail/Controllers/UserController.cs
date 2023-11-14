@@ -7,6 +7,7 @@ using WebServerMail.Options;
 
 namespace WebServerMail.Controllers
 {
+    [Route("api/[controller]")]
     public class UserController : Controller
     {
         private readonly MailDbContext db;
@@ -16,7 +17,7 @@ namespace WebServerMail.Controllers
             db = context;
         }
 
-        
+        [HttpGet("auth/{login}/{password}")]
         public IActionResult Auth(string login, string password)
         {
             var identity = GetIdentity(login, password);
@@ -64,7 +65,7 @@ namespace WebServerMail.Controllers
         }
 
 
-        
+        [HttpGet("get-user/{id}")]
         public IResult GetUser(int id)
         {
 
@@ -75,7 +76,7 @@ namespace WebServerMail.Controllers
                 // если пользователь найден, отправляем его
                 return Results.Json(user);  
         }
-
+        [HttpGet("get-list-user/{searchText}")]
         public IResult GetListUser(string searchText)
         {
 
@@ -87,7 +88,7 @@ namespace WebServerMail.Controllers
             // если пользователь найден, отправляем его
             return Results.Json(users);
         }
-
+        [HttpGet("create-user/{user}")]
         public IResult CreateUser(User user)
         {
 

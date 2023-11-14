@@ -2,6 +2,7 @@
 
 namespace WebServerMail.Controllers
 {
+    [Route("api/[controller]")]
     public class LetterController : Controller
     {
         private readonly MailDbContext db;
@@ -9,7 +10,7 @@ namespace WebServerMail.Controllers
         {
             db = context;
         }
-
+        [HttpGet("get-list-user-letters/{userId}")]
         public IResult GetListUserLetters(int userId)
         {
 
@@ -29,7 +30,7 @@ namespace WebServerMail.Controllers
 
             return Results.Json(letters.ToList());
         }
-
+        [HttpGet("get-list-user-history/{userId}")]
         public IResult GetListUserHistory(int userId)
         {
 
@@ -49,7 +50,7 @@ namespace WebServerMail.Controllers
 
             return Results.Json(letters.ToList());
         }
-
+        [HttpGet("send-letter/{letter}")]
         public void SendLetter(Letter letter)
         {
             db.Letters.Add(letter);
