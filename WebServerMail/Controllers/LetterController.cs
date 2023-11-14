@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using WebServerMail.Common;
 
 namespace WebServerMail.Controllers
 {
@@ -8,9 +10,11 @@ namespace WebServerMail.Controllers
     public class LetterController : Controller
     {
         private readonly MailDbContext db;
-        public LetterController(MailDbContext context)
+        private IHubContext<LetterHub> letterHub;
+        public LetterController(MailDbContext context, IHubContext<LetterHub> letterHub)
         {
             db = context;
+            this.letterHub = letterHub;
         }
         [HttpGet("get-list-user-letters/{userId}")]
         public IResult GetListUserLetters(int userId)
@@ -55,8 +59,11 @@ namespace WebServerMail.Controllers
         [HttpPost("send-letter/")]
         public void SendLetter([FromBody] Letter letter)
         {
+
             db.Letters.Add(letter);
             db.SaveChanges();
+
+            letterHub.Clients.User(letter.Recipient.ToString()).SendAsync(letter.Recipient.ToString(), "");
         }
     }
 }

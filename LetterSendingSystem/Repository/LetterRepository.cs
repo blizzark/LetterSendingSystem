@@ -1,5 +1,6 @@
 ﻿using LetterSendingSystem.Entities;
 using LetterSendingSystem.Helper;
+using LetterSendingSystem.Socket;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Json;
@@ -36,6 +37,8 @@ namespace LetterSendingSystem.Connect
         public static async Task SendLetter(Letter letter)
         {
             using var response = await Request.Post($"{Request.hostName}{Routes.SEND_LETTER}", letter).ConfigureAwait(false);
+            LetterSendViewModel letterSend = new LetterSendViewModel(letter);
+            await letterSend.SendMessage();
         }
     }
 }

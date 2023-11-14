@@ -16,5 +16,6 @@ namespace LetterSendingSystem
         public const string AUTH = "/api/auth/";
         public const string SEARCH = "/api/get-list-user/";
         public const string CREATE_USER = "/api/create-user/";
+        public const string HUB = "/hub";
     }
 }
