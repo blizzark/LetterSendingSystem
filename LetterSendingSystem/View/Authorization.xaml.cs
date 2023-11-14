@@ -51,7 +51,7 @@ namespace LetterSendingSystem
 
             try
             {
-                User? user = UserRepository.Auth(login, password).Result;
+                User? user = UserRepository.Auth(new RestClient() {Login = login, Password = password }).Result;
                 if (user != null)
                 {
                     MailForm win = new MailForm(user);

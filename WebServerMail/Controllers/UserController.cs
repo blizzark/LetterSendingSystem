@@ -1,30 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using WebServerMail.Entities;
 using WebServerMail.Options;
 
 namespace WebServerMail.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     public class UserController : Controller
     {
         private readonly MailDbContext db;
+
+
 
         public UserController(MailDbContext context)
         {
             db = context;
         }
-
-        [HttpGet("auth/{login}/{password}")]
-        public IActionResult Auth(string login, string password)
+        [HttpPost("auth/")]
+        public IActionResult Auth([FromBody] RestClient client)
         {
-            var identity = GetIdentity(login, password);
-            if (identity == null)
-            {
-                return BadRequest(new { errorText = "Invalid login or password." });
-            }
+            User? user = db.Users.FirstOrDefault(u => u.Email == client.Login && u.Password == client.Password);
+            if (user is null)
+                return BadRequest(new { errorText = "Invalid login or password." }); ;
+
+            var identity = GetIdentity(user);
 
             var now = DateTime.UtcNow;
             // создаем JWT-токен
@@ -32,7 +35,7 @@ namespace WebServerMail.Controllers
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
                     notBefore: now,
-                    claims: identity.Claims,
+                    claims: identity!.Claims,
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
@@ -40,31 +43,25 @@ namespace WebServerMail.Controllers
             var response = new
             {
                 accessToken = encodedJwt,
-                username = identity.Name
+                user = user
             };
 
             return Json(response);
         }
 
-        private ClaimsIdentity? GetIdentity(string login, string password)
+        private ClaimsIdentity? GetIdentity(User user)
         {
-
-                User? userCheck = db.Users.FirstOrDefault(u => u.Email == login && u.Password == password);
-                
-                if (userCheck is null) return null;
-
             var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, userCheck.Email),
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
                 };
             ClaimsIdentity claimsIdentity =
             new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);
             return claimsIdentity;
-
         }
 
-
+        [Authorize]
         [HttpGet("get-user/{id}")]
         public IResult GetUser(int id)
         {
@@ -76,6 +73,8 @@ namespace WebServerMail.Controllers
                 // если пользователь найден, отправляем его
                 return Results.Json(user);  
         }
+
+        [Authorize]
         [HttpGet("get-list-user/{searchText}")]
         public IResult GetListUser(string searchText)
         {
@@ -88,8 +87,9 @@ namespace WebServerMail.Controllers
             // если пользователь найден, отправляем его
             return Results.Json(users);
         }
-        [HttpGet("create-user/{user}")]
-        public IResult CreateUser(User user)
+
+        [HttpPost("create-user/")]
+        public IResult CreateUser([FromBody] User user)
         {
 
             User? existenceCheckUser = db.Users.FirstOrDefault(u => u.Email == user.Email);

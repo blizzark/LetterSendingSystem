@@ -11,9 +11,9 @@ namespace LetterSendingSystem.Connect
 {
     internal static class UserRepository
     {
-        public static async Task<User?> Auth(string login, string password)
+        public static async Task<User?> Auth(RestClient client)
         {
-            using var response = await Request.Get($"{Request.hostName}{Routes.USERS}{login}/{password}").ConfigureAwait(false);
+            using var response = await Request.Post($"{Request.hostName}{Routes.AUTH}", client).ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
 
             if (response is null)
@@ -55,7 +55,12 @@ namespace LetterSendingSystem.Connect
             if (response is null)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<User>();
+            User? registerUser = await response.Content.ReadFromJsonAsync<User>();
+
+            if(registerUser is null)
+                return null;
+
+            return Auth(new RestClient() { Login = registerUser.Email, Password = registerUser.Password }).Result;
         }
 
     }

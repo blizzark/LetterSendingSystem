@@ -58,6 +58,8 @@ namespace LetterSendingSystem
                 {
                     user.Password = MD5.GetHash(user.Password);
                     user = UserRepository.CreateUser(user).Result!;
+                    if (user is null)
+                        throw new Exception("Проверьте подключение!");
 
                     MessageBox.Show("Пользователь создан!", "Успешная регистрация", MessageBoxButton.OK, MessageBoxImage.Information);
                     MailForm win = new MailForm(user);

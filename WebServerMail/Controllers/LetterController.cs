@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebServerMail.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
+    [Authorize]
     public class LetterController : Controller
     {
         private readonly MailDbContext db;
@@ -50,8 +52,8 @@ namespace WebServerMail.Controllers
 
             return Results.Json(letters.ToList());
         }
-        [HttpGet("send-letter/{letter}")]
-        public void SendLetter(Letter letter)
+        [HttpPost("send-letter/")]
+        public void SendLetter([FromBody] Letter letter)
         {
             db.Letters.Add(letter);
             db.SaveChanges();
