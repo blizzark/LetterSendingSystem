@@ -74,6 +74,7 @@ app.MapDefaultControllerRoute();
 
 
 
+
 //app.MapGet("/", () => "Hello World!");
 
 //app.MapGet("/api/search/{searchText}", [Authorize] (string searchText) =>
@@ -117,24 +118,24 @@ app.MapDefaultControllerRoute();
 
 //app.MapGet("/api/letters/{UserId}", [Authorize] (int UserId) =>
 //{
-//    using (MailDbContext db = new MailDbContext(options))
-//    {
-//        var letters = from letter in db.Letters
-//                      join user in db.Users on letter.Recipient equals user.Id
-//                      where user.Id == UserId
-//                      orderby letter.Date descending
-//                      select new
-//                      {
-//                          EmailSender = db.Users.FirstOrDefault(x => x.Id == letter.Sender)!.Email,
-//                          Titel = letter.Titel,
-//                          Text = letter.Text,
-//                          Date = letter.Date
-//                      };
+//using (MailDbContext db = new MailDbContext(options))
+//{
+//    var letters = from letter in db.Letters
+//                  join user in db.Users on letter.Recipient equals user.Id
+//                  where user.Id == UserId
+//                  orderby letter.Date descending
+//                  select new
+//                  {
+//                      EmailSender = db.Users.FirstOrDefault(x => x.Id == letter.Sender)!.Email,
+//                      Titel = letter.Titel,
+//                      Text = letter.Text,
+//                      Date = letter.Date
+//                  };
 
-//        if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
+//    if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
 
-//        return Results.Json(letters.ToList());
-//    }
+//    return Results.Json(letters.ToList());
+//}
 
 
 //});

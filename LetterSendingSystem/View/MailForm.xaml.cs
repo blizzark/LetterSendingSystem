@@ -120,7 +120,7 @@ namespace LetterSendingSystem
                 Letter letter = new Letter() { Sender = userSender.Id, Recipient = userRecipient.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now };
                 try
                 {
-                    await LetterRepository.PostLetter(letter);
+                    await LetterRepository.SendLetter(letter);
                     
                     MessageBox.Show("Письмо успешно отправлено!", "Отправлено", MessageBoxButton.OK, MessageBoxImage.Information);
                     ClearTextBox();

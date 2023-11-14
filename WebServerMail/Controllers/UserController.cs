@@ -17,12 +17,12 @@ namespace WebServerMail.Controllers
         }
 
         
-        public IActionResult Token(string username, string password)
+        public IActionResult Auth(string login, string password)
         {
-            var identity = GetIdentity(username, password);
+            var identity = GetIdentity(login, password);
             if (identity == null)
             {
-                return BadRequest(new { errorText = "Invalid username or password." });
+                return BadRequest(new { errorText = "Invalid login or password." });
             }
 
             var now = DateTime.UtcNow;
@@ -64,20 +64,39 @@ namespace WebServerMail.Controllers
         }
 
 
-        [HttpPost("/")]
-        public IResult Index(int id)
+        
+        public IResult GetUser(int id)
         {
-
-           
 
                 // получаем пользователя по id
                 User? user = db.Users.Find(id);
                 // если не найден, отправляем статусный код и сообщение об ошибке
                 if (user == null) return Results.NotFound(new { message = "Пользователь не найден" });
-
                 // если пользователь найден, отправляем его
-                return Results.Json(user);
-            
+                return Results.Json(user);  
+        }
+
+        public IResult GetListUser(string searchText)
+        {
+
+            List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).ToList();
+            //List<User> users = db.Users.Where(x => x.FirstName.StartsWith(searchText) || x.SecondName.StartsWith(searchText) || x.Email.StartsWith(searchText)).ToList();
+            if (users.Count == 0) return Results.NotFound(new { message = "Пользователи не найдены" });
+
+
+            // если пользователь найден, отправляем его
+            return Results.Json(users);
+        }
+
+        public IResult CreateUser(User user)
+        {
+
+            User? existenceCheckUser = db.Users.FirstOrDefault(u => u.Email == user.Email);
+            if (existenceCheckUser != null) return Results.BadRequest(new { message = "Пользователь с такой почтой уже зарегистрирован!" });
+
+            db.Users.Add(user);
+            db.SaveChanges();
+            return Results.Json(user);
         }
     }
 }

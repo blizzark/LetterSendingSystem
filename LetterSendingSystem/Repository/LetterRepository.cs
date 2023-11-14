@@ -33,7 +33,7 @@ namespace LetterSendingSystem.Connect
 
         }
 
-        public static async Task PostLetter(Letter letter)
+        public static async Task SendLetter(Letter letter)
         {
             using var response = await Request.Post($"{Request.hostName}{Routes.SEND_LETTER}", letter).ConfigureAwait(false);
         }
