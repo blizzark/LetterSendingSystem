@@ -22,7 +22,7 @@ namespace LetterSendingSystem
         /// <param name="mes"></param>
         public static void ErrorMessegeBox(string mes)
         {
-            MessageBox.Show(mes, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(mes, MessageConst.ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public static bool ValidateObject<T>(T obj)

@@ -12,11 +12,11 @@ namespace LetterSendingSystem.Entities
     /// </summary>
     public class RestClient
     {
-        [Required(ErrorMessage = "Не указана почта пользователя")]
-        [RegularExpression(@"(\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)", ErrorMessage = "Почта указана в неверном формате")]
+        [Required(ErrorMessage = MessageConst.EMAIL_NOT_SPECIFIED)]
+        [RegularExpression(@"(\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)", ErrorMessage = MessageConst.MAIL_IN_WRONG_FORMAT)]
         public string Login { get; set; } = null!;
 
-        [Required(ErrorMessage = "Не указан пароль")]
+        [Required(ErrorMessage = MessageConst.PASSWORD_NOT_SPECIFIED)]
         public string Password { get; set; } = null!;
     }
 }

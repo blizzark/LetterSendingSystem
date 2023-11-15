@@ -30,7 +30,7 @@ namespace WebServerMail.Controllers
                               Date = letter.Date
                           }).Skip(page * SKIP_TAKE_ELEMENTS).Take(SKIP_TAKE_ELEMENTS);
 
-            if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
+            if (letters == null) return Results.NotFound(new { message = "No letters found" });
 
             return Results.Json(letters.ToList());
         }
@@ -51,7 +51,7 @@ namespace WebServerMail.Controllers
                               Date = letter.Date
                           }).Skip(page * SKIP_TAKE_ELEMENTS).Take(SKIP_TAKE_ELEMENTS);
 
-            if (letters == null) return Results.NotFound(new { message = "Письма не найдены" });
+            if (letters == null) return Results.NotFound(new { message = "No letters found" });
 
             return Results.Json(letters.ToList());
         }

@@ -69,7 +69,7 @@ namespace WebServerMail.Controllers
               
                 User? user = db.Users.Find(id);
              
-                if (user == null) return Results.NotFound(new { message = "Пользователь не найден" });
+                if (user == null) return Results.NotFound(new { message = "No users found" });
             
                 return Results.Json(user);  
         }
@@ -80,7 +80,7 @@ namespace WebServerMail.Controllers
         {
 
             List<User> users = db.Users.Where(x => x.FirstName.Contains(searchText) || x.SecondName.Contains(searchText) || x.Email.Contains(searchText)).Take(5).ToList();
-            if (users.Count == 0) return Results.NotFound(new { message = "Пользователи не найдены" });
+            if (users.Count == 0) return Results.NotFound(new { message = "No users found" });
 
 
             return Results.Json(users);
@@ -91,7 +91,7 @@ namespace WebServerMail.Controllers
         {
 
             User? existenceCheckUser = db.Users.FirstOrDefault(u => u.Email == user.Email);
-            if (existenceCheckUser != null) return Results.BadRequest(new { message = "Пользователь с такой почтой уже зарегистрирован!" });
+            if (existenceCheckUser != null) return Results.BadRequest(new { message = "User already exists" });
 
             db.Users.Add(user);
             db.SaveChanges();

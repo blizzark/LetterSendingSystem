@@ -26,7 +26,7 @@ namespace LetterSendingSystem.Helper
             else if (response.StatusCode == HttpStatusCode.OK)
                 return response;
             else 
-                throw new System.Exception($"Ошибка на сервере {response.StatusCode}");
+                throw new System.Exception($"{MessageConst.ERROR_SERVER} {response.StatusCode}");
             
         }
 

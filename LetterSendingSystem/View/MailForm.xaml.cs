@@ -34,7 +34,7 @@ namespace LetterSendingSystem
             InitializeComponent();
 
           
-            Title = $"Здравствуйте, {user.FirstName}!";
+            Title = $"{MessageConst.GREETINGS} {user.FirstName}!";
             UserLetters = LoadListBoxUserLetters();
             UserHistory = LoadListBoxUserHistory();
             listBoxUserLetters.ItemsSource = UserLetters;
@@ -136,19 +136,17 @@ namespace LetterSendingSystem
             var tb = (TextBox)e.OriginalSource;
             if (tb.SelectionStart != 0)
             {
-                ComboNameRecipient.SelectedItem = null; // Если набирается текст сбросить выбраный элемент
+                ComboNameRecipient.SelectedItem = null; 
             }
             if (tb.SelectionStart == 0 && ComboNameRecipient.SelectedItem == null)
             {
-                ComboNameRecipient.IsDropDownOpen = false; // Если сбросили текст и элемент не выбран, сбросить фокус выпадающего списка
+                ComboNameRecipient.IsDropDownOpen = false; 
             }
             ComboNameRecipient.IsDropDownOpen = true;
 
             if (ComboNameRecipient.SelectedItem == null)
             {
-                // Если элемент не выбран менять фильтр
                 CollectionView cv = (CollectionView)CollectionViewSource.GetDefaultView(ComboNameRecipient.ItemsSource);
-                //cv.Filter = s => ((s.).IndexOf(ComboNameRecipient.Text, StringComparison.CurrentCultureIgnoreCase) >= 0;
             }
         }
 
@@ -171,7 +169,7 @@ namespace LetterSendingSystem
         {
             if (ComboNameRecipient.Text == string.Empty)
             {
-                App.ErrorMessegeBox("Выберите получателя письма!");
+                App.ErrorMessegeBox(MessageConst.SELECT_EMAIL_RECIPIENT);
                 return;
             }
             if ((User)ComboNameRecipient.SelectedItem is User userRecipient)
@@ -181,7 +179,7 @@ namespace LetterSendingSystem
                 {
                     await LetterRepository.SendLetter(letter);
                     
-                    MessageBox.Show("Письмо успешно отправлено!", "Отправлено", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(MessageConst.LETTER_SENT, MessageConst.SENT, MessageBoxButton.OK, MessageBoxImage.Information);
                     ClearTextBox();
                     UserHistory.Insert(0,letter);
                     tabControl.SelectedItem = incomingTab;
@@ -194,7 +192,7 @@ namespace LetterSendingSystem
             }
             else
             {
-                App.ErrorMessegeBox("Выберите получателя письма!");
+                App.ErrorMessegeBox(MessageConst.SELECT_EMAIL_RECIPIENT);
                 return;
             }
 
@@ -213,7 +211,7 @@ namespace LetterSendingSystem
                 viewingTitelTextBox.Text = letter.Titel;
                 viewingBodyTextBox.Text = letter.Text;
                 tabControl.SelectedItem = viewingLetterTab;
-                dateLabel.Content = $"Дата: {letter.Date}";
+                dateLabel.Content = $"{MessageConst.DATE_IN_LABEL} {letter.Date}";
                 listBoxUserLetters.SelectedIndex = removeSelection;
 
             }
@@ -232,7 +230,7 @@ namespace LetterSendingSystem
                 viewingNameRecipientBox.Text = letter.EmailSender;
                 viewingTitelTextBox.Text = letter.Titel;
                 viewingBodyTextBox.Text = letter.Text;
-                dateLabel.Content = $"Дата: {letter.Date}";
+                dateLabel.Content = $"{MessageConst.DATE_IN_LABEL} {letter.Date}";
                 listBoxUserHistory.SelectedIndex = removeSelection;
 
                 tabControl.SelectedItem = viewingLetterTab;

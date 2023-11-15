@@ -70,12 +70,12 @@ namespace LetterSendingSystem
                     }
                     else
                     {
-                        MessageBox.Show("Пользователь не найден!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        App.ErrorMessegeBox(MessageConst.USER_IS_NOT_FOUND);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    App.ErrorMessegeBox(ex.Message);
                 }
             }
         }
