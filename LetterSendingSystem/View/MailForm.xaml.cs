@@ -3,12 +3,9 @@ using LetterSendingSystem.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace LetterSendingSystem
 {
@@ -33,10 +30,15 @@ namespace LetterSendingSystem
             this.userSender = user;
             InitializeComponent();
 
-          
+
             Title = $"{MessageConst.GREETINGS} {user.FirstName}!";
-            UserLetters = LoadListBoxUserLetters();
-            UserHistory = LoadListBoxUserHistory();
+
+            UserLetters = new ObservableCollection<Letter>();
+            LoadListBoxUserLetters();
+
+            UserHistory = new ObservableCollection<Letter>();
+            LoadListBoxUserHistory();
+
             listBoxUserLetters.ItemsSource = UserLetters;
             listBoxUserHistory.ItemsSource = UserHistory;
 
@@ -44,47 +46,53 @@ namespace LetterSendingSystem
 
 
 
-
-
         /// <summary>
         /// Loads the first sample of received emails.
         /// </summary>
         /// <returns>A sample if there is one. Empty selection if there is none</returns>
-        private ObservableCollection<Letter> LoadListBoxUserLetters()
+        private void LoadListBoxUserLetters()
         {
             List<Letter>? letters = null;
             try
             {
                 letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserLetters++).Result;
+
+                if (letters is null)
+                    return;
+
+                foreach (var lettersItem in letters)
+                {
+                    UserLetters.Add(lettersItem);
+                }
             }
             catch (Exception ex)
             {
                 App.ErrorMessegeBox(ex.Message);
             }
-            if (letters is null)
-                return new ObservableCollection<Letter>();
-            return new ObservableCollection<Letter>(letters);
         }
 
         /// <summary>
         /// Loads the first sample of sent emails.
         /// </summary>
         /// <returns>A sample if there is one. Empty selection if there is none</returns>
-        private ObservableCollection<Letter> LoadListBoxUserHistory()
+        private void LoadListBoxUserHistory()
         {
             List<Letter>? letters = null;
             try
             {
                 letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserHistory++).Result;
+                if (letters is null)
+                    return;
+
+                foreach (var lettersItem in letters)
+                {
+                    UserHistory.Add(lettersItem);
+                }
             }
             catch (Exception ex)
             {
                 App.ErrorMessegeBox(ex.Message);
             }
-
-            if (letters is null)
-                return new ObservableCollection<Letter>();
-            return new ObservableCollection<Letter>(letters);
 
         }
 
@@ -128,7 +136,7 @@ namespace LetterSendingSystem
                 return;
             }
 
-           
+
 
             string searchText = ComboNameRecipient.Text;
             ComboNameRecipient.ItemsSource = GetFilteredCountries(searchText);
@@ -136,11 +144,11 @@ namespace LetterSendingSystem
             var tb = (TextBox)e.OriginalSource;
             if (tb.SelectionStart != 0)
             {
-                ComboNameRecipient.SelectedItem = null; 
+                ComboNameRecipient.SelectedItem = null;
             }
             if (tb.SelectionStart == 0 && ComboNameRecipient.SelectedItem == null)
             {
-                ComboNameRecipient.IsDropDownOpen = false; 
+                ComboNameRecipient.IsDropDownOpen = false;
             }
             ComboNameRecipient.IsDropDownOpen = true;
 
@@ -174,14 +182,14 @@ namespace LetterSendingSystem
             }
             if ((User)ComboNameRecipient.SelectedItem is User userRecipient)
             {
-                Letter letter = new Letter() { Sender = userSender.Id, Recipient = userRecipient.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now, EmailSender = userRecipient.Email};
+                Letter letter = new Letter() { Sender = userSender.Id, Recipient = userRecipient.Id, Titel = titelTextBox.Text, Text = bodyTextBox.Text, Date = DateTime.Now, EmailSender = userRecipient.Email };
                 try
                 {
                     await LetterRepository.SendLetter(letter);
-                    
+
                     MessageBox.Show(MessageConst.LETTER_SENT, MessageConst.SENT, MessageBoxButton.OK, MessageBoxImage.Information);
                     ClearTextBox();
-                    UserHistory.Insert(0,letter);
+                    UserHistory.Insert(0, letter);
                     tabControl.SelectedItem = incomingTab;
                 }
                 catch (Exception ex)
@@ -277,7 +285,7 @@ namespace LetterSendingSystem
             {
                 scrollViewer.LineDown();
             }
-           
+
             e.Handled = true;
         }
 
@@ -288,27 +296,10 @@ namespace LetterSendingSystem
         /// <param name="e"></param>
         private void ScrollViewerHistory_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            // Checking to see if we have reached the end of the ListView
+            // Checking if we have reached the end of the ListView while scrolling
             if (scrollViewerHistory.VerticalOffset == scrollViewerHistory.ScrollableHeight)
             {
-                try
-                {
-                    var letters = LetterRepository.GetListUserHistory(userSender.Id, pageListBoxUserHistory++).Result;
-
-                    if (letters is null)
-                        return;
-
-                    foreach (var lettersItem in letters)
-                    {
-                        UserHistory.Add(lettersItem);
-                    }
-
-                  
-                }
-                catch (Exception ex)
-                {
-                    App.ErrorMessegeBox(ex.Message);
-                }
+                LoadListBoxUserHistory();
             }
         }
         /// <summary>
@@ -318,27 +309,10 @@ namespace LetterSendingSystem
         /// <param name="e"></param>
         private void ScrollViewerLetters_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            // Проверяем, достигли ли мы конца ListView при прокрутке
+            // Checking if we have reached the end of the ListView while scrolling
             if (scrollViewerLetters.VerticalOffset == scrollViewerLetters.ScrollableHeight)
             {
-                try
-                {
-                    var letters = LetterRepository.GetListUserLetters(userSender.Id, pageListBoxUserHistory++).Result;
-
-                    if (letters is null)
-                        return;
-
-                    foreach (var lettersItem in letters)
-                    {
-                        UserLetters.Add(lettersItem);
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    App.ErrorMessegeBox(ex.Message);
-                }
+                LoadListBoxUserLetters();
             }
         }
     }

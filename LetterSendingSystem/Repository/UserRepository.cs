@@ -27,10 +27,10 @@ namespace LetterSendingSystem.Connect
             if (response is null)
                 return null;
 
-            var userAndTocken = await response.Content.ReadFromJsonAsync<UserAndToken>();
+            var userAndToken = await response.Content.ReadFromJsonAsync<UserAndToken>();
 
-            User user = userAndTocken!.User;
-            Request.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userAndTocken.AccessToken);
+            User user = userAndToken!.User;
+            Request.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userAndToken.AccessToken);
             return user;
 
         }

@@ -26,7 +26,6 @@
         public const string CHECK_YOUR_CONNECTION = "Проверьте подключение!";
         public const string USER_CREATED = "Пользователь создан!";
         public const string SUCCESSFUL_REGISTRATION = "Успешная регистрация";
-        public const string
 
     }
 }
