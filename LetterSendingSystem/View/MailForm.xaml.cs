@@ -60,7 +60,7 @@ namespace LetterSendingSystem
                 if (letters is null)
                     return;
 
-                foreach (var lettersItem in letters)
+                foreach (Letter lettersItem in letters)
                 {
                     UserLetters.Add(lettersItem);
                 }
@@ -84,7 +84,7 @@ namespace LetterSendingSystem
                 if (letters is null)
                     return;
 
-                foreach (var lettersItem in letters)
+                foreach (Letter lettersItem in letters)
                 {
                     UserHistory.Add(lettersItem);
                 }
@@ -141,7 +141,7 @@ namespace LetterSendingSystem
             string searchText = ComboNameRecipient.Text;
             ComboNameRecipient.ItemsSource = GetFilteredCountries(searchText);
 
-            var tb = (TextBox)e.OriginalSource;
+            TextBox tb = (TextBox)e.OriginalSource;
             if (tb.SelectionStart != 0)
             {
                 ComboNameRecipient.SelectedItem = null;

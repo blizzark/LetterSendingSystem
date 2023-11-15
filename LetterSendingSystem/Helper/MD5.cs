@@ -20,8 +20,8 @@ namespace LetterSendingSystem.Helper
         /// <returns>hash</returns>
         public static string GetHash(string input)
         {
-            var md5 = System.Security.Cryptography.MD5.Create();
-            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+            System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
 
             return Convert.ToBase64String(hash);
         }

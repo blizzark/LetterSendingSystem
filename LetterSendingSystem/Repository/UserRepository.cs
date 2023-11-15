@@ -3,6 +3,7 @@ using LetterSendingSystem.Helper;
 using LetterSendingSystem.JsonItems;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -21,13 +22,13 @@ namespace LetterSendingSystem.Connect
         /// <returns></returns>
         public static async Task<User?> Auth(RestClient client)
         {
-            using var response = await Request.Post($"{Request.hostName}{Routes.AUTH}", client).ConfigureAwait(false);
+            using HttpResponseMessage? response = await Request.Post($"{Request.hostName}{Routes.AUTH}", client).ConfigureAwait(false);
 
 
             if (response is null)
                 return null;
 
-            var userAndToken = await response.Content.ReadFromJsonAsync<UserAndToken>();
+            UserAndToken? userAndToken = await response.Content.ReadFromJsonAsync<UserAndToken>();
 
             User user = userAndToken!.User;
             Request.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userAndToken.AccessToken);
@@ -41,7 +42,7 @@ namespace LetterSendingSystem.Connect
         /// <returns></returns>
         public static async Task<User?> GetUser(int UserId)
         {
-            using var response = await Request.Get($"{Request.hostName}{Routes.USERS}{UserId}").ConfigureAwait(false);
+            using HttpResponseMessage? response = await Request.Get($"{Request.hostName}{Routes.USERS}{UserId}").ConfigureAwait(false);
 
             if (response is null)
                 return null;
@@ -56,7 +57,7 @@ namespace LetterSendingSystem.Connect
         /// <returns></returns>
         public static async Task<List<User>?> GetListUser(string searchText)
         {
-            using var response = await Request.Get($"{Request.hostName}{Routes.SEARCH}{searchText}").ConfigureAwait(false);
+            using HttpResponseMessage? response = await Request.Get($"{Request.hostName}{Routes.SEARCH}{searchText}").ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response is null)
                 return null;
@@ -72,7 +73,7 @@ namespace LetterSendingSystem.Connect
         /// <returns></returns>
         public static async Task<User?> CreateUser(User user)
         {
-            using var response = await Request.Post($"{Request.hostName}{Routes.CREATE_USER}", user).ConfigureAwait(false);
+            using HttpResponseMessage? response = await Request.Post($"{Request.hostName}{Routes.CREATE_USER}", user).ConfigureAwait(false);
             // если объект на сервере найден, то есть статусный код равен 404
             if (response is null)
                 return null;
